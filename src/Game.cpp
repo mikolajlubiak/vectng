@@ -46,18 +46,6 @@ void Game::init(const char *title, uint_fast32_t xpos, uint_fast32_t ypos, uint_
 	enemy.addComponent<SpriteComponent>("assets/Player/p2_front.png");
 }
 
-void Game::handleEvents() {
-	SDL_EventState(SDL_MOUSEMOTION,SDL_IGNORE);
-	SDL_PollEvent(&event);
-	switch (event.type) {
-	case SDL_QUIT:
-		isRunning = false;
-		break;
-	default:
-		break;
-	}
-}
-
 void Game::update() {
 	manager.refresh();
 	manager.update();

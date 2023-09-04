@@ -11,7 +11,6 @@ public:
 
 	void init(const char *title, uint_fast32_t xpos, uint_fast32_t ypos, uint_fast16_t width, uint_fast16_t height, SDL_WindowFlags flags);
 
-	void handleEvents();
 	void update();
 	void render();
 	void clean();
@@ -19,8 +18,7 @@ public:
 
 	static SDL_Renderer *renderer;
 	static SDL_Event event;
-
 private:
-	bool isRunning;
 	SDL_Window *window;
+	bool isRunning;
 };
