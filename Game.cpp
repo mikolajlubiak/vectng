@@ -66,8 +66,8 @@ void Game::update() {
   player->Update();
   enemy->Update();
   manager.update();
-  std::cout << newPlayer.getComponent<PositionComponent>().x() << ","
-            << newPlayer.getComponent<PositionComponent>().y() << std::endl;
+  /*std::cout << newPlayer.getComponent<PositionComponent>().x() << ","
+            << newPlayer.getComponent<PositionComponent>().y() << std::endl;*/
 }
 
 void Game::render() {
