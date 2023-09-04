@@ -9,13 +9,14 @@ Map *map;
 SDL_Renderer *Game::renderer = nullptr;
 
 Manager manager;
+SDL_Event Game::event;
 auto &player(manager.addEntity());
 auto &enemy(manager.addEntity());
 
 Game::Game() {}
 Game::~Game() {}
 
-void Game::init(const char *title, unsigned int xpos, unsigned int ypos, uint16_t width, uint16_t height, SDL_WindowFlags flags) {
+void Game::init(const char *title, uint_fast32_t xpos, uint_fast32_t ypos, uint_fast16_t width, uint_fast16_t height, SDL_WindowFlags flags) {
 	if (SDL_Init(SDL_INIT_EVERYTHING) == 0) {
 		std::cout << "Subsystems Initialised!" << std::endl;
 
@@ -39,13 +40,14 @@ void Game::init(const char *title, unsigned int xpos, unsigned int ypos, uint16_
 
 	player.addComponent<TransformComponent>();
 	player.addComponent<SpriteComponent>("assets/Player/p1_front.png");
+	player.addComponent<KeyboardController>();
 
 	enemy.addComponent<TransformComponent>(100, 100);
 	enemy.addComponent<SpriteComponent>("assets/Player/p2_front.png");
 }
 
 void Game::handleEvents() {
-	SDL_Event event;
+	SDL_EventState(SDL_MOUSEMOTION,SDL_IGNORE);
 	SDL_PollEvent(&event);
 	switch (event.type) {
 	case SDL_QUIT:
@@ -59,12 +61,7 @@ void Game::handleEvents() {
 void Game::update() {
 	manager.refresh();
 	manager.update();
-	player.getComponent<TransformComponent>().position.Add(Vector2D(5, 5));
-	enemy.getComponent<TransformComponent>().position.Add(Vector2D(8, 2));
-
-	if (player.getComponent<TransformComponent>().position.x > 256) {
-		player.getComponent<SpriteComponent>().setTex("assets/Player/p3_front.png");
-	}
+	enemy.getComponent<TransformComponent>().position.Add(Vector2D((uint_fast32_t)8, (uint_fast32_t)2));
 }
 
 void Game::render() {

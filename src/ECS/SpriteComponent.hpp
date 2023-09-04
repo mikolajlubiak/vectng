@@ -25,8 +25,8 @@ public:
 		srcRect.h = destRect.h = 92;
 	}
 	void update() override {
-		destRect.x = (int)transform->position.x;
-		destRect.y = (int)transform->position.y;
+		destRect.x = transform->position.x;
+		destRect.y = transform->position.y;
 	}
 	void draw() override { TextureManager::Draw(texture, srcRect, destRect); }
 };

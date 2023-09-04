@@ -1,7 +1,7 @@
 #include "Map.hpp"
 #include "TextureManager.hpp"
 
-uint8_t lvl1[32][32] = {
+uint_fast8_t lvl1[32][32] = {
 	{1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
 	{1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
 	{1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
@@ -54,17 +54,17 @@ Map::Map() {
 	dest.w = 70;
 }
 
-void Map::LoadMap(uint8_t arr[32][32]) {
-	for (uint8_t row = 0; row < 32; row++) {
-		for (uint8_t column = 0; column < 32; column++) {
+void Map::LoadMap(uint_fast8_t arr[32][32]) {
+	for (uint_fast8_t row = 0; row < 32; row++) {
+		for (uint_fast8_t column = 0; column < 32; column++) {
 			map[row][column] = arr[row][column];
 		}
 	}
 }
 void Map::DrawMap() {
-	uint8_t type = 0;
-	for (uint8_t row = 0; row < 32; row++) {
-		for (uint8_t column = 0; column < 32; column++) {
+	uint_fast8_t type = 0;
+	for (uint_fast8_t row = 0; row < 32; row++) {
+		for (uint_fast8_t column = 0; column < 32; column++) {
 			type = map[row][column];
 			dest.x = column * 70; dest.y = row * 70;
 			TextureManager::Draw(water, src, dest);

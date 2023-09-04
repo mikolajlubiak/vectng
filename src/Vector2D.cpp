@@ -1,11 +1,11 @@
 #include "Vector2D.hpp"
 
 Vector2D::Vector2D() {
-	x = 0.0f;
-	y = 0.0f;
+	x = 0.0;
+	y = 0.0;
 }
 
-Vector2D::Vector2D(float x, float y) {
+Vector2D::Vector2D(uint_fast32_t x, uint_fast32_t y) {
 	this->x = x;
 	this->y = y;
 }

@@ -1,13 +1,14 @@
 #pragma once
 #include <iostream>
+#include <cstdint>
 
 class Vector2D {
 public:
-	float x;
-	float y;
+	uint_fast32_t x;
+	uint_fast32_t y;
 
 	Vector2D();
-	Vector2D(float x, float y);
+	Vector2D(uint_fast32_t x, uint_fast32_t y);
 
 	Vector2D& Add(const Vector2D& vec);
 	Vector2D& Subtract(const Vector2D& vec);
