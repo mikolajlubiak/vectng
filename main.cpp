@@ -1,5 +1,4 @@
 #include "Game.hpp"
-#include <SDL2/SDL_video.h>
 
 Game *game = nullptr;
 
@@ -12,8 +11,7 @@ int main(int argc, const char *argv[]) {
 
   game = new Game;
 
-  game->init("GAME", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1280, 720,
-             SDL_WINDOW_VULKAN);
+  game->init("GAME", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1280, 720, SDL_WINDOW_VULKAN);
 
   while (game->running()) {
     frameStart = SDL_GetTicks();
