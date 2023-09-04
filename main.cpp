@@ -1,6 +1,6 @@
 #include "Game.hpp"
 
-Game *game;
+Game *game = nullptr;
 
 int main(int argc, const char* argv[])
 {
