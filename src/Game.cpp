@@ -49,7 +49,7 @@ void Game::init(const char *title, uint_fast32_t xpos, uint_fast32_t ypos, uint_
 void Game::update() {
 	manager.refresh();
 	manager.update();
-	enemy.getComponent<TransformComponent>().position.Add(Vector2D((uint_fast32_t)8, (uint_fast32_t)2));
+	enemy.getComponent<TransformComponent>().position.Add(Vector2D((uint_fast32_t)3, (uint_fast32_t)2));
 }
 
 void Game::render() {
