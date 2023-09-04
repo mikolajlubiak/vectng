@@ -1,5 +1,6 @@
 #include "Map.hpp"
 #include "TextureManager.hpp"
+#include <SDL2/SDL_render.h>
 
 uint_fast8_t lvl1[32][32] = {
 	{1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
@@ -52,6 +53,12 @@ Map::Map() {
 	dest.y = 0;
 	dest.h = 70;
 	dest.w = 70;
+}
+
+Map::~Map() {
+	SDL_DestroyTexture(dirt);
+	SDL_DestroyTexture(grass);
+	SDL_DestroyTexture(water);
 }
 
 void Map::LoadMap(uint_fast8_t arr[32][32]) {

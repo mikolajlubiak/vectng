@@ -3,6 +3,7 @@
 #include "Map.hpp"
 #include "TextureManager.hpp"
 #include "Vector2D.hpp"
+#include "Collision.hpp"
 
 Map *map;
 
@@ -11,14 +12,21 @@ SDL_Renderer *Game::renderer = nullptr;
 Manager manager;
 SDL_Event Game::event;
 auto &player(manager.addEntity());
+auto &wall(manager.addEntity());
 auto &enemy(manager.addEntity());
 
 Game::Game() {}
 Game::~Game() {}
 
-void Game::init(const char *title, uint_fast32_t xpos, uint_fast32_t ypos, uint_fast16_t width, uint_fast16_t height, SDL_WindowFlags flags) {
+void Game::init(const char *title, uint_fast32_t xpos, uint_fast32_t ypos, uint_fast16_t width, uint_fast16_t height, bool fullscreen) {
 	if (SDL_Init(SDL_INIT_EVERYTHING) == 0) {
 		std::cout << "Subsystems Initialised!" << std::endl;
+
+		int flags = 0;
+
+		if (fullscreen) {
+			flags = SDL_WINDOW_FULLSCREEN;
+		}
 
 		window = SDL_CreateWindow(title, xpos, ypos, width, height, flags);
 		if (window) {
@@ -41,9 +49,15 @@ void Game::init(const char *title, uint_fast32_t xpos, uint_fast32_t ypos, uint_
 	player.addComponent<TransformComponent>();
 	player.addComponent<SpriteComponent>("assets/Player/p1_front.png");
 	player.addComponent<KeyboardController>();
+	player.addComponent<ColliderComponent>("player");
 
 	enemy.addComponent<TransformComponent>(100, 100);
 	enemy.addComponent<SpriteComponent>("assets/Player/p2_front.png");
+	enemy.addComponent<ColliderComponent>("enemy");
+	
+	wall.addComponent<TransformComponent>(300, 300, 300, 20, 1);
+	wall.addComponent<SpriteComponent>("assets/Tiles/dirt.png");
+	wall.addComponent<ColliderComponent>("wall");
 }
 
 void Game::update() {

@@ -51,7 +51,6 @@ public:
 				std::cout << "Game Cleaned!" << std::endl;
 				exit(0);
 			}
-
 		}
 	}
 };

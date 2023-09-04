@@ -9,7 +9,7 @@ public:
 	Game();
 	~Game();
 
-	void init(const char *title, uint_fast32_t xpos, uint_fast32_t ypos, uint_fast16_t width, uint_fast16_t height, SDL_WindowFlags flags);
+	void init(const char *title, uint_fast32_t xpos, uint_fast32_t ypos, uint_fast16_t width, uint_fast16_t height, bool fullscreen);
 
 	void update();
 	void render();
