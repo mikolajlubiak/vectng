@@ -46,8 +46,10 @@ public:
 				}
 			}
 			else if (Game::event.type == SDL_QUIT) {
+				SDL_DestroyRenderer(Game::renderer);
 				SDL_Quit();
 				std::cout << "Game Cleaned!" << std::endl;
+				exit(0);
 			}
 
 		}
