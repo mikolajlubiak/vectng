@@ -1,5 +1,3 @@
-# Don't include assets in the git repo
-assets/
 # Don't include ccls LSP cache in the git repo
 .ccls-cache/
 # Don't include compiled game binary in the git repo
