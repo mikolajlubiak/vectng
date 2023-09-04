@@ -1,7 +1,7 @@
-assets/
-.ccls-cache/
-game
-obj/
+assets/ # Don't include assets in the git repo
+.ccls-cache/ # Don't include ccls LSP cache in the git repo
+game # Don't include compiled game binary in the git repo
+obj/ # Don't include object files (compiled code before linking) in the git repo
 
 # ---> C++
 # Compiled Object files
