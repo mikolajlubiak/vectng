@@ -5,20 +5,21 @@
 
 class Game {
 public:
-    Game();
-    ~Game();
+  Game();
+  ~Game();
 
-    void init(const char* title, int xpos, int ypos, Uint16 width, Uint16 height, bool fullscreen);
+  void init(const char *title, int xpos, int ypos, Uint16 width, Uint16 height,
+            bool fullscreen);
 
-    void handleEvents();
-    void update();
-    void render();
-    void clean();
-    bool running() {return isRunning;}
-    
-    static SDL_Renderer *renderer;
+  void handleEvents();
+  void update();
+  void render();
+  void clean();
+  bool running() { return isRunning; }
+
+  static SDL_Renderer *renderer;
 
 private:
-    bool isRunning;
-    SDL_Window *window;
+  bool isRunning;
+  SDL_Window *window;
 };
