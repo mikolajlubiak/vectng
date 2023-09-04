@@ -41,7 +41,7 @@ void Game::init(const char* title, int xpos, int ypos, Uint16 width, Uint16 heig
         isRunning = false;
     }
     
-    player = new GameObject("Player/p1_front.png", renderer);
+    player = new GameObject("Player/p1_front.png", renderer, 0, 0);
 }
 
 void Game::handleEvents()
