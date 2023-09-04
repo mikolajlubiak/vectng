@@ -37,9 +37,9 @@ uint8_t lvl1[32][32] = {
 };
 
 Map::Map() {
-	dirt = TextureManager::LoadTexture("Tiles/dirt.png");
-	grass = TextureManager::LoadTexture("Tiles/grass.png");
-	water = TextureManager::LoadTexture("Tiles/liquidWater.png");
+	dirt = TextureManager::LoadTexture("assets/Tiles/dirt.png");
+	grass = TextureManager::LoadTexture("assets/Tiles/grass.png");
+	water = TextureManager::LoadTexture("assets/Tiles/liquidWater.png");
 
 	LoadMap(lvl1);
 

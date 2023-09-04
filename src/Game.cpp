@@ -16,7 +16,6 @@ Game::Game() {}
 Game::~Game() {}
 
 void Game::init(const char *title, unsigned int xpos, unsigned int ypos, uint16_t width, uint16_t height, SDL_WindowFlags flags) {
-
 	if (SDL_Init(SDL_INIT_EVERYTHING) == 0) {
 		std::cout << "Subsystems Initialised!" << std::endl;
 
@@ -39,10 +38,10 @@ void Game::init(const char *title, unsigned int xpos, unsigned int ypos, uint16_
 	map = new Map();
 
 	player.addComponent<TransformComponent>();
-	player.addComponent<SpriteComponent>("Player/p1_front.png");
+	player.addComponent<SpriteComponent>("assets/Player/p1_front.png");
 
 	enemy.addComponent<TransformComponent>(100, 100);
-	enemy.addComponent<SpriteComponent>("Player/p2_front.png");
+	enemy.addComponent<SpriteComponent>("assets/Player/p2_front.png");
 }
 
 void Game::handleEvents() {
@@ -64,7 +63,7 @@ void Game::update() {
 	enemy.getComponent<TransformComponent>().position.Add(Vector2D(8, 2));
 
 	if (player.getComponent<TransformComponent>().position.x > 256) {
-		player.getComponent<SpriteComponent>().setTex("Player/p3_front.png");
+		player.getComponent<SpriteComponent>().setTex("assets/Player/p3_front.png");
 	}
 }
 

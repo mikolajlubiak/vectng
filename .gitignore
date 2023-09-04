@@ -1,10 +1,7 @@
-Enemies/
-HUD/
-Items/
-Player/
-Tiles/
-Vector/
+assets/
 .ccls-cache/
+game
+obj/
 
 # ---> C++
 # Compiled Object files
