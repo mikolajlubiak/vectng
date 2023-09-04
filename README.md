@@ -7,6 +7,8 @@
 # Install:
 * Arch:
 	`pacman -S sdl2 sdl2_image`
+* Windows:
+https://www.matsson.com/prog/sdl2-mingw-w64-tutorial
 
 # Compiling:
 	`make clean game`
