@@ -61,7 +61,8 @@ void Game::handleEvents() {
 void Game::update() {
 	manager.refresh();
 	manager.update();
-	player.getComponent<TransformComponent>().position.Add(Vector2D(5, 0));
+	player.getComponent<TransformComponent>().position.Add(Vector2D(5, 5));
+	enemy.getComponent<TransformComponent>().position.Add(Vector2D(8, 2));
 
 	if (player.getComponent<TransformComponent>().position.x > 100) {
 		player.getComponent<SpriteComponent>().setTex("Player/p3_front.png");
