@@ -1,13 +1,16 @@
 #ifndef Game_hpp
 #define Game_hpp
+#include <SDL2/SDL_image.h>
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_stdinc.h>
+#include <iostream>
 
 class Game {
 public:
     Game();
     ~Game();
 
-    void init(const char* title, unsigned int xpos, unsigned int ypos, unsigned int width, unsigned int height, bool fullscreen);
+    void init(const char* title, Uint32 xpos, Uint32 ypos, Uint16 width, Uint16 height, bool fullscreen);
 
     void handleEvents();
     void update();
@@ -20,8 +23,6 @@ private:
     bool isRunning;
     SDL_Window *window;
     SDL_Renderer *renderer;
-    unsigned int cnt = 0;
-
 };
 
 #endif

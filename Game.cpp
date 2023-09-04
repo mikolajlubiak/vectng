@@ -1,14 +1,16 @@
 #include "Game.hpp"
-#include <iostream>
+
+SDL_Texture *playerTexture;
+SDL_Rect srcR, destR;
 
 Game::Game()
 {}
 Game::~Game()
 {}
 
-void Game::init(const char* title, unsigned int xpos, unsigned int ypos, unsigned int width, unsigned int height, bool fullscreen)
+void Game::init(const char* title, Uint32 xpos, Uint32 ypos, Uint16 width, Uint16 height, bool fullscreen)
 {
-    unsigned short flags = 0;
+    Uint8 flags = 0;
     if (fullscreen)
     {
         flags = SDL_WINDOW_FULLSCREEN;
@@ -27,7 +29,7 @@ void Game::init(const char* title, unsigned int xpos, unsigned int ypos, unsigne
         renderer = SDL_CreateRenderer(window, -1, 0);
         if(renderer)
         {
-            SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+            SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
             std::cout << "Renderer created!" << std::endl;
         }
 
@@ -37,6 +39,11 @@ void Game::init(const char* title, unsigned int xpos, unsigned int ypos, unsigne
     {
         isRunning = false;
     }
+    
+    SDL_Surface *tmpSurface = IMG_Load("Player/p1_front.png");
+    playerTexture = SDL_CreateTextureFromSurface(renderer, tmpSurface);
+    SDL_FreeSurface(tmpSurface);
+    
 }
 
 void Game::handleEvents()
@@ -54,13 +61,15 @@ void Game::handleEvents()
 
 void Game::update()
 {
-    cnt++;
-    std::cout << cnt << std::endl;
+    destR.h = 92;
+    destR.w = 66;
+    destR.x++;
 }
 
 void Game::render()
 {
     SDL_RenderClear(renderer);
+    SDL_RenderCopy(renderer, playerTexture, NULL, &destR);
     SDL_RenderPresent(renderer);
 }
 
