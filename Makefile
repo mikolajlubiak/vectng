@@ -4,7 +4,7 @@ SRC_FILES := $(wildcard $(SRC_DIR)/*.cpp)
 OBJ_FILES := $(patsubst $(SRC_DIR)/%.cpp,$(OBJ_DIR)/%.o,$(SRC_FILES))
 LDFLAGS :=  -L/usr/lib -lSDL2 -lSDL2_image
 CPPFLAGS := -std=c++20
-CXXFLAGS := -Wall -Wextra -O2 -I/usr/include -static
+CXXFLAGS := -Wall -Wextra -pedantic -O3 -I/usr/include -static
 
 game: $(OBJ_FILES)
 	clang++ $(LDFLAGS) -o $@ $^

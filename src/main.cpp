@@ -3,7 +3,7 @@
 Game *game = nullptr;
 
 int main() {
-	const uint_fast8_t FPS = 60;
+	const uint_fast8_t FPS = 144;
 	const uint_fast8_t FRAME_DELAY = 1000 / FPS;
 
 	uint_fast32_t frameStart;
