@@ -15,8 +15,7 @@ auto &enemy(manager.addEntity());
 Game::Game() {}
 Game::~Game() {}
 
-void Game::init(const char *title, int xpos, int ypos, Uint16 width,
-		Uint16 height, SDL_WindowFlags flags) {
+void Game::init(const char *title, unsigned int xpos, unsigned int ypos, uint16_t width, uint16_t height, SDL_WindowFlags flags) {
 
 	if (SDL_Init(SDL_INIT_EVERYTHING) == 0) {
 		std::cout << "Subsystems Initialised!" << std::endl;
