@@ -16,7 +16,7 @@ Game::Game() {}
 Game::~Game() {}
 
 void Game::init(const char *title, int xpos, int ypos, Uint16 width,
-								Uint16 height, SDL_WindowFlags flags) {
+		Uint16 height, SDL_WindowFlags flags) {
 
 	if (SDL_Init(SDL_INIT_EVERYTHING) == 0) {
 		std::cout << "Subsystems Initialised!" << std::endl;
