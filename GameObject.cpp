@@ -2,27 +2,27 @@
 #include "TextureManager.hpp"
 
 GameObject::GameObject(const char *textureSheet, uint8_t x, uint8_t y) {
-  objTexture = TextureManager::LoadTexture(textureSheet);
+	objTexture = TextureManager::LoadTexture(textureSheet);
 
-  xpos = x;
-  ypos = y;
+	xpos = x;
+	ypos = y;
 }
 
 void GameObject::Update() {
-  xpos++;
-  ypos++;
+	xpos++;
+	ypos++;
 
-  srcRect.h = 92;
-  srcRect.w = 66;
-  srcRect.x = 0;
-  srcRect.y = 0;
+	srcRect.h = 92;
+	srcRect.w = 66;
+	srcRect.x = 0;
+	srcRect.y = 0;
 
-  destRect.x = xpos;
-  destRect.y = ypos;
-  destRect.w = srcRect.w;
-  destRect.h = srcRect.h;
+	destRect.x = xpos;
+	destRect.y = ypos;
+	destRect.w = srcRect.w;
+	destRect.h = srcRect.h;
 }
 
 void GameObject::Render() {
-  SDL_RenderCopy(Game::renderer, objTexture, &srcRect, &destRect);
+	SDL_RenderCopy(Game::renderer, objTexture, &srcRect, &destRect);
 }
