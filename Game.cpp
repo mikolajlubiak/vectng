@@ -1,15 +1,15 @@
 #include "Game.hpp"
 #include "TextureManager.hpp"
+#include "GameObject.hpp"
 
-SDL_Texture *playerTexture;
-SDL_Rect srcR, destR;
+GameObject* player;
 
 Game::Game()
 {}
 Game::~Game()
 {}
 
-void Game::init(const char* title, Uint32 xpos, Uint32 ypos, Uint16 width, Uint16 height, bool fullscreen)
+void Game::init(const char* title, int xpos, int ypos, Uint16 width, Uint16 height, bool fullscreen)
 {
     Uint8 flags = 0;
     if (fullscreen)
@@ -41,7 +41,7 @@ void Game::init(const char* title, Uint32 xpos, Uint32 ypos, Uint16 width, Uint1
         isRunning = false;
     }
     
-    playerTexture = TextureManager::LoadTexture("Player/p1_front.png", renderer);
+    player = new GameObject("Player/p1_front.png", renderer);
 }
 
 void Game::handleEvents()
@@ -59,15 +59,13 @@ void Game::handleEvents()
 
 void Game::update()
 {
-    destR.h = 92;
-    destR.w = 66;
-    destR.x++;
+    player->Update();
 }
 
 void Game::render()
 {
     SDL_RenderClear(renderer);
-    SDL_RenderCopy(renderer, playerTexture, NULL, &destR);
+    player->Render();
     SDL_RenderPresent(renderer);
 }
 

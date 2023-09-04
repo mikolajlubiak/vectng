@@ -8,7 +8,7 @@ public:
     Game();
     ~Game();
 
-    void init(const char* title, Uint32 xpos, Uint32 ypos, Uint16 width, Uint16 height, bool fullscreen);
+    void init(const char* title, int xpos, int ypos, Uint16 width, Uint16 height, bool fullscreen);
 
     void handleEvents();
     void update();
