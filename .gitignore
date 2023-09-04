@@ -4,6 +4,7 @@ Items/
 Player/
 Tiles/
 Vector/
+.ccls-cache/
 
 # ---> C++
 # Compiled Object files
