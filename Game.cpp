@@ -1,18 +1,15 @@
 #include "Game.hpp"
-#include "Components.hpp"
-#include "ECS.hpp"
-#include "GameObject.hpp"
+#include "ECS/Components.hpp"
 #include "Map.hpp"
 #include "TextureManager.hpp"
 
-GameObject *player;
-GameObject *enemy;
 Map *map;
 
 SDL_Renderer *Game::renderer = nullptr;
 
 Manager manager;
-auto &newPlayer(manager.addEntity());
+auto &player(manager.addEntity());
+auto &enemy(manager.addEntity());
 
 Game::Game() {}
 Game::~Game() {}
@@ -43,11 +40,13 @@ void Game::init(const char *title, int xpos, int ypos, Uint16 width,
     isRunning = false;
   }
 
-  player = new GameObject("Player/p1_front.png", 0, 0);
-  enemy = new GameObject("Player/p2_front.png", 100, 100);
   map = new Map();
 
-  newPlayer.addComponent<PositionComponent>();
+  player.addComponent<PositionComponent>();
+  player.addComponent<SpriteComponent>("Player/p1_front.png");
+
+  enemy.addComponent<PositionComponent>(100, 100);
+  enemy.addComponent<SpriteComponent>("Player/p2_front.png");
 }
 
 void Game::handleEvents() {
@@ -63,9 +62,12 @@ void Game::handleEvents() {
 }
 
 void Game::update() {
-  player->Update();
-  enemy->Update();
+  manager.refresh();
   manager.update();
+
+  if (player.getComponent<PositionComponent>().x() > 100) {
+    player.getComponent<SpriteComponent>().setTex("Player/p3_front.png");
+  }
   /*std::cout << newPlayer.getComponent<PositionComponent>().x() << ","
             << newPlayer.getComponent<PositionComponent>().y() << std::endl;*/
 }
@@ -73,8 +75,7 @@ void Game::update() {
 void Game::render() {
   SDL_RenderClear(Game::renderer);
   map->DrawMap();
-  player->Render();
-  enemy->Render();
+  manager.draw();
   SDL_RenderPresent(Game::renderer);
 }
 

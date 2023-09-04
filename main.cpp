@@ -4,7 +4,7 @@ Game *game = nullptr;
 
 int main(int argc, const char *argv[]) {
   const Uint8 FPS = 60;
-  const Uint8 FRAME_DELAY = 1024 / FPS;
+  const Uint8 FRAME_DELAY = 1000 / FPS;
 
   Uint32 frameStart;
   Uint8 frameTime;
