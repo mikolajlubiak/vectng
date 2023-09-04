@@ -1,5 +1,4 @@
 #include "Game.hpp"
-#include <SDL2/SDL_timer.h>
 
 Game *game = nullptr;
 
@@ -13,7 +12,7 @@ int main(int argc, const char* argv[])
     
     game = new Game;
 
-    game->init("GAME", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1280, 720, false);
+    game->init("GAME", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1366, 768, false);
 
     while(game->running())
     {
