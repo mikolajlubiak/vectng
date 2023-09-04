@@ -1,6 +1,6 @@
 #include "Game.hpp"
 
-Game *game = nullptr;
+Game *game;
 
 int main(int argc, const char* argv[])
 {
@@ -8,11 +8,11 @@ int main(int argc, const char* argv[])
     const Uint8 FRAME_DELAY = 1000 / FPS;
     
     Uint32 frameStart;
-    Uint16 frameTime;
+    Uint8 frameTime;
     
     game = new Game;
 
-    game->init("GAME", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1366, 768, false);
+    game->init("GAME", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1280, 720, false);
 
     while(game->running())
     {
