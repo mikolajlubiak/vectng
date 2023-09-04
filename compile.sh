@@ -1,1 +1,1 @@
-clang++ main.cpp Game.cpp TextureManager.cpp -lSDL2 -lSDL2_image -Ofast -march=native -mtune=native
+clang++ main.cpp Game.cpp TextureManager.cpp -lSDL2 -lSDL2_image -Os -march=native -mtune=native -Wall
