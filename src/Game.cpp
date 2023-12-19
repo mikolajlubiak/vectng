@@ -51,11 +51,11 @@ void Game::init(const char *title, uint_fast32_t xpos, uint_fast32_t ypos, uint_
 	player.addComponent<KeyboardController>();
 	player.addComponent<ColliderComponent>("player");
 
-	enemy.addComponent<TransformComponent>(100, 100);
+	enemy.addComponent<TransformComponent>(100.0f, 100.0f);
 	enemy.addComponent<SpriteComponent>("assets/Player/p2_front.png");
 	enemy.addComponent<ColliderComponent>("enemy");
 	
-	wall.addComponent<TransformComponent>(300, 300, 300, 20, 1);
+	wall.addComponent<TransformComponent>(300.0f, 300.0f, 200, 200, 1);
 	wall.addComponent<SpriteComponent>("assets/Tiles/dirt.png");
 	wall.addComponent<ColliderComponent>("wall");
 }

@@ -16,14 +16,14 @@ public:
 	uint_fast8_t speed = 3;
 
 	TransformComponent() {
-		position.x = 0.0;
-		position.y = 0.0;
+		position.x = 0.0f;
+		position.y = 0.0f;
 	}
-	TransformComponent(uint_fast32_t x, uint_fast32_t y) {
+	TransformComponent(float x, float y) {
 		position.x = x;
 		position.y = y;
 	}
-	TransformComponent(uint_fast32_t x, uint_fast32_t y, uint_fast16_t h, uint_fast16_t w, int_fast8_t sc) {
+	TransformComponent(float x, float y, uint_fast16_t h, uint_fast16_t w, int_fast8_t sc) {
 		position.x = x;
 		position.y = y;
 		height = h;
@@ -33,8 +33,8 @@ public:
 	}
 
 	void init() override {
-		velocity.x = 0;
-		velocity.y = 0;
+		velocity.x = 0.0f;
+		velocity.y = 0.0f;
 	}
 	void update() override {
 		position.x += velocity.x * speed;

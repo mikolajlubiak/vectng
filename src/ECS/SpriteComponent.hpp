@@ -5,7 +5,6 @@
 #include <SDL2/SDL_render.h>
 #include "Components.hpp"
 
-
 class SpriteComponent : public Component {
 private:
 	TransformComponent *transform;

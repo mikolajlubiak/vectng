@@ -5,7 +5,7 @@ Vector2D::Vector2D() {
 	y = 0.0;
 }
 
-Vector2D::Vector2D(uint_fast32_t x, uint_fast32_t y) {
+Vector2D::Vector2D(float x, float y) {
 	this->x = x;
 	this->y = y;
 }
