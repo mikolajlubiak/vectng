@@ -16,8 +16,7 @@ public:
 	uint_fast8_t speed = 3;
 
 	TransformComponent() {
-		position.x = 0.0f;
-		position.y = 0.0f;
+		position.Zero();
 	}
 	TransformComponent(float x, float y) {
 		position.x = x;
@@ -29,12 +28,14 @@ public:
 		height = h;
 		width = w;
 		scale = sc;
-		
+	}
+	TransformComponent(int_fast8_t sc) {
+		position.Zero();
+		scale = sc;
 	}
 
 	void init() override {
-		velocity.x = 0.0f;
-		velocity.y = 0.0f;
+		velocity.Zero();
 	}
 	void update() override {
 		position.x += velocity.x * speed;

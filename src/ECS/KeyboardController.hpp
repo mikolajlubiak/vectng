@@ -36,11 +36,11 @@ public:
 				switch (Game::event.key.keysym.sym) {
 					case SDLK_w:
 					case SDLK_s:
-						transform->velocity.y = 0;
+						transform->velocity.y = 0.0f;
 						break;
 					case SDLK_a:
 					case SDLK_d:
-						transform->velocity.x = 0;
+						transform->velocity.x = 0.0f;
 						break;
 					default: break;
 				}

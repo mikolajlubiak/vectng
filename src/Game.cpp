@@ -1,5 +1,7 @@
 #include "Game.hpp"
+#include "ECS/ColliderComponent.hpp"
 #include "ECS/Components.hpp"
+#include "ECS/TransformComponent.hpp"
 #include "Map.hpp"
 #include "TextureManager.hpp"
 #include "Vector2D.hpp"
@@ -46,7 +48,7 @@ void Game::init(const char *title, uint_fast32_t xpos, uint_fast32_t ypos, uint_
 
 	map = new Map();
 
-	player.addComponent<TransformComponent>();
+	player.addComponent<TransformComponent>(2);
 	player.addComponent<SpriteComponent>("assets/Player/p1_front.png");
 	player.addComponent<KeyboardController>();
 	player.addComponent<ColliderComponent>("player");
@@ -63,7 +65,14 @@ void Game::init(const char *title, uint_fast32_t xpos, uint_fast32_t ypos, uint_
 void Game::update() {
 	manager.refresh();
 	manager.update();
-	enemy.getComponent<TransformComponent>().position.Add(Vector2D((uint_fast32_t)3, (uint_fast32_t)2));
+	enemy.getComponent<TransformComponent>().position.Add(Vector2D(2.0f, 2.0f));
+
+	if (Collision::AABB(player.getComponent<ColliderComponent>().collider,
+		wall.getComponent<ColliderComponent>().collider))
+	{
+		player.getComponent<TransformComponent>().scale = 1;
+		player.getComponent<TransformComponent>().velocity * -1;
+	}
 }
 
 void Game::render() {
