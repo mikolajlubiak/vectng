@@ -2,5 +2,3 @@
 .ccls-cache/
 # Don't include compiled game binary in the git repo
 game
-# Don't include object files (compiled code before linking) in the git repo
-obj/
