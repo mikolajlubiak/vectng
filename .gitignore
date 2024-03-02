@@ -1,4 +1,2 @@
-# Don't include ccls LSP cache in the git repo
-.ccls-cache/
-# Don't include compiled game binary in the git repo
-game
+debug
+release
