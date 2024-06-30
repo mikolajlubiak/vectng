@@ -20,6 +20,8 @@ auto &enemy(manager.addEntity());
 Game::Game() {}
 Game::~Game() {}
 
+bool Game::isRunning = false;
+
 void Game::init(const char *title, uint_fast32_t xpos, uint_fast32_t ypos, uint_fast16_t width, uint_fast16_t height, bool fullscreen) {
 	if (SDL_Init(SDL_INIT_EVERYTHING) == 0) {
 		std::cout << "Subsystems Initialised!" << std::endl;
@@ -48,7 +50,7 @@ void Game::init(const char *title, uint_fast32_t xpos, uint_fast32_t ypos, uint_
 
 	map = new Map();
 
-	player.addComponent<TransformComponent>(2);
+	player.addComponent<TransformComponent>();
 	player.addComponent<SpriteComponent>("assets/Player/p1_front.png");
 	player.addComponent<KeyboardController>();
 	player.addComponent<ColliderComponent>("player");
@@ -70,21 +72,19 @@ void Game::update() {
 	if (Collision::AABB(player.getComponent<ColliderComponent>().collider,
 		wall.getComponent<ColliderComponent>().collider))
 	{
-		player.getComponent<TransformComponent>().scale = 1;
 		player.getComponent<TransformComponent>().velocity * -1;
 	}
 }
 
 void Game::render() {
-	SDL_RenderClear(Game::renderer);
+	SDL_RenderClear(renderer);
 	map->DrawMap();
 	manager.draw();
-	SDL_RenderPresent(Game::renderer);
+	SDL_RenderPresent(renderer);
 }
 
 void Game::clean() {
 	SDL_DestroyWindow(window);
-	SDL_DestroyRenderer(Game::renderer);
+	SDL_DestroyRenderer(renderer);
 	SDL_Quit();
-	std::cout << "Game Cleaned!" << std::endl;
 }
