@@ -13,6 +13,7 @@ SDL_Renderer *Game::renderer = nullptr;
 
 Manager manager;
 SDL_Event Game::event;
+
 auto &player(manager.addEntity());
 auto &wall(manager.addEntity());
 auto &enemy(manager.addEntity());
@@ -84,4 +85,5 @@ void Game::clean() {
 	SDL_DestroyWindow(window);
 	SDL_DestroyRenderer(renderer);
 	SDL_Quit();
+	std::cout << "Game Cleaned!" << std::endl;
 }

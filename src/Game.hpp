@@ -15,6 +15,7 @@ public:
 	static SDL_Renderer *renderer;
 	static SDL_Event event;
 	static bool isRunning;
+
 private:
 	SDL_Window *window;
 };

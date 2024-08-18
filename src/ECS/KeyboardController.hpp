@@ -10,7 +10,7 @@ public:
 
 	void init() override {
 		transform = &entity->getComponent<TransformComponent>();
-		SDL_EventState(SDL_MOUSEMOTION,SDL_IGNORE);
+		SDL_EventState(SDL_MOUSEMOTION, SDL_IGNORE);
 	}
 
 	void update() override {
