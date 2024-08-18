@@ -5,7 +5,7 @@
 
 class Game {
 public:
-	void init(const char *title, uint_fast32_t xpos, uint_fast32_t ypos, uint_fast16_t width, uint_fast16_t height, bool fullscreen);
+	void init(const char *title, uint_fast32_t xpos, uint_fast32_t ypos, uint_fast32_t width, uint_fast32_t height, bool fullscreen);
 
 	void update();
 	void render();

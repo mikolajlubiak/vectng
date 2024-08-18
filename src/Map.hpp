@@ -6,7 +6,7 @@ public:
 	Map();
 	~Map();
 
-	void LoadMap(const uint8_t[32][32]);
+	void LoadMap(const uint_fast32_t[32][32]);
 	void DrawMap();
 
 private:
@@ -14,5 +14,5 @@ private:
 	SDL_Texture *dirt;
 	SDL_Texture *grass;
 	SDL_Texture *water;
-	uint_fast8_t map[32][32];
+	uint_fast32_t map[32][32];
 };

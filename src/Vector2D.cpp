@@ -64,7 +64,7 @@ Vector2D& Vector2D::operator/=(const Vector2D& vec) {
 	return this->Divide(vec);
 }
 
-Vector2D& Vector2D::operator*(const int_fast8_t& i) {
+Vector2D& Vector2D::operator*(const int_fast32_t& i) {
 	this->x *= i;
 	this->y *= i;
 

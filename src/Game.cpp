@@ -20,7 +20,7 @@ auto &enemy(manager.addEntity());
 
 bool Game::isRunning = false;
 
-void Game::init(const char *title, uint_fast32_t xpos, uint_fast32_t ypos, uint_fast16_t width, uint_fast16_t height, bool fullscreen) {
+void Game::init(const char *title, uint_fast32_t xpos, uint_fast32_t ypos, uint_fast32_t width, uint_fast32_t height, bool fullscreen) {
 	if (SDL_Init(SDL_INIT_EVERYTHING) == 0) {
 		std::cout << "Subsystems Initialised!" << std::endl;
 

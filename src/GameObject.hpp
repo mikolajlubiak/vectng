@@ -9,8 +9,8 @@ public:
 	void Render();
 
 private:
-	uint16_t xpos;
-	uint16_t ypos;
+	uint_fast32_t xpos;
+	uint_fast32_t ypos;
 
 	SDL_Texture *objTexture;
 	SDL_Rect srcRect, destRect;

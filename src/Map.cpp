@@ -3,7 +3,7 @@
 #include <SDL2/SDL_render.h>
 #include <cstring>
 
-constexpr uint8_t lvl1[32][32] = {
+constexpr uint_fast32_t lvl1[32][32] = {
 	{1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
 	{1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
 	{1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
@@ -62,14 +62,14 @@ Map::~Map() {
 	SDL_DestroyTexture(water);
 }
 
-void Map::LoadMap(const uint8_t arr[32][32]) {
+void Map::LoadMap(const uint_fast32_t arr[32][32]) {
 	std::memcpy(map, arr, sizeof(map));
 }
 
 void Map::DrawMap() {
-	uint_fast8_t type = 0;
-	for (uint_fast8_t row = 0; row < 32; row++) {
-		for (uint_fast8_t column = 0; column < 32; column++) {
+	uint_fast32_t type = 0;
+	for (uint_fast32_t row = 0; row < 32; row++) {
+		for (uint_fast32_t column = 0; column < 32; column++) {
 			type = map[row][column];
 			dest.x = column * 70; dest.y = row * 70;
 			TextureManager::Draw(water, src, dest);

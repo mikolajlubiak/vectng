@@ -3,11 +3,11 @@
 Game *game = nullptr;
 
 int main() {
-	const uint16_t FPS = 60;
-	const uint8_t FRAME_DELAY = 1000 / FPS;
+	const uint_fast32_t FPS = 60;
+	const uint_fast32_t FRAME_DELAY = 1000 / FPS;
 
 	uint_fast32_t frameStart;
-	uint16_t frameTime;
+	uint_fast32_t frameTime;
 
 	game = new Game;
 
