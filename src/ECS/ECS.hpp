@@ -23,7 +23,7 @@ template <typename T> inline ComponentID getComponentTypeID() noexcept {
 constexpr std::size_t maxComponents = 32;
 
 using ComponentBitSet = std::bitset<maxComponents>;
-using ComponentArray = std::array<Component *, maxComponents>;
+using ComponentArray = std::array<std::shared_ptr<Component>, maxComponents>;
 
 class Component {
 public:
@@ -39,7 +39,7 @@ public:
 class Entity {
 private:
 	bool active = true;
-	std::vector<std::unique_ptr<Component>> components;
+	std::vector<std::shared_ptr<Component>> components;
 
 	ComponentArray componentArray;
 	ComponentBitSet componentBitSet;
@@ -61,26 +61,20 @@ public:
 	}
 
 	template <typename T, typename... TArgs> T &addComponent(TArgs &&...mArgs) {
-		// Create a unique_ptr for the component
-		std::shared_ptr<T> uPtr = std::make_unique<T>(std::forward<TArgs>(mArgs)...);
-		uPtr->entity = this;
+		std::shared_ptr<T> component_ptr = std::make_shared<T>(std::forward<TArgs>(mArgs)...);
+		component_ptr->entity = this;
 
-		// Store the unique_ptr in the components vector
-		components.emplace_back(std::move(uPtr));
+		components.emplace_back(component_ptr);
 
-		// Get the raw pointer from the unique_ptr and cast it to the correct type
-		T *c = static_cast<T*>(components.back().get());
-
-		componentArray[getComponentTypeID<T>()] = c;
+		componentArray[getComponentTypeID<T>()] = component_ptr;
 		componentBitSet[getComponentTypeID<T>()] = true;
 
-		c->init();
-		return *c;
+		component_ptr->init();
+		return *component_ptr;
 	}
 
 	template <typename T> T &getComponent() const {
-		auto ptr(componentArray[getComponentTypeID<T>()]);
-		return *static_cast<T *>(ptr);
+		return *std::dynamic_pointer_cast<T>(componentArray[getComponentTypeID<T>()]);
 	}
 };
 
