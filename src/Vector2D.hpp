@@ -1,6 +1,6 @@
 #pragma once
 #include <iostream>
-#include <cstdint>
+#include <stdint.h>
 
 class Vector2D {
 public:

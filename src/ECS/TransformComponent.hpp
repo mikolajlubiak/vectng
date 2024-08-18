@@ -2,7 +2,7 @@
 
 #include "Components.hpp"
 #include "../Vector2D.hpp"
-#include <cstdint>
+#include <stdint.h>
 
 struct TransformComponent : public Component {
 public:

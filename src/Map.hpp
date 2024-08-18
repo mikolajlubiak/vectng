@@ -6,7 +6,7 @@ public:
 	Map();
 	~Map();
 
-	void LoadMap(uint_fast8_t[32][32]);
+	void LoadMap(const uint8_t[32][32]);
 	void DrawMap();
 
 private:

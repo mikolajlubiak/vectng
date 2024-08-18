@@ -1,8 +1,9 @@
 #include "Map.hpp"
 #include "TextureManager.hpp"
 #include <SDL2/SDL_render.h>
+#include <cstring>
 
-uint_fast8_t lvl1[32][32] = {
+constexpr uint8_t lvl1[32][32] = {
 	{1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
 	{1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
 	{1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
@@ -61,13 +62,10 @@ Map::~Map() {
 	SDL_DestroyTexture(water);
 }
 
-void Map::LoadMap(uint_fast8_t arr[32][32]) {
-	for (uint_fast8_t row = 0; row < 32; row++) {
-		for (uint_fast8_t column = 0; column < 32; column++) {
-			map[row][column] = arr[row][column];
-		}
-	}
+void Map::LoadMap(const uint8_t arr[32][32]) {
+	std::memcpy(map, arr, sizeof(map));
 }
+
 void Map::DrawMap() {
 	uint_fast8_t type = 0;
 	for (uint_fast8_t row = 0; row < 32; row++) {

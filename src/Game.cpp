@@ -7,7 +7,7 @@
 #include "Vector2D.hpp"
 #include "Collision.hpp"
 
-Map *map;
+std::unique_ptr<Map> map;
 
 SDL_Renderer *Game::renderer = nullptr;
 
@@ -16,9 +16,6 @@ SDL_Event Game::event;
 auto &player(manager.addEntity());
 auto &wall(manager.addEntity());
 auto &enemy(manager.addEntity());
-
-Game::Game() {}
-Game::~Game() {}
 
 bool Game::isRunning = false;
 
@@ -29,7 +26,7 @@ void Game::init(const char *title, uint_fast32_t xpos, uint_fast32_t ypos, uint_
 		int flags = 0;
 
 		if (fullscreen) {
-			flags = SDL_WINDOW_FULLSCREEN;
+			flags |= SDL_WINDOW_FULLSCREEN;
 		}
 
 		window = SDL_CreateWindow(title, xpos, ypos, width, height, flags);
@@ -48,7 +45,7 @@ void Game::init(const char *title, uint_fast32_t xpos, uint_fast32_t ypos, uint_
 		isRunning = false;
 	}
 
-	map = new Map();
+	map = std::make_unique<Map>();
 
 	player.addComponent<TransformComponent>();
 	player.addComponent<SpriteComponent>("assets/Player/p1_front.png");

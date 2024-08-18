@@ -1,5 +1,4 @@
 #include "Vector2D.hpp"
-#include <cstdint>
 
 Vector2D::Vector2D() {
 	x = 0.0f;
