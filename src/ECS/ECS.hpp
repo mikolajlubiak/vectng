@@ -61,10 +61,15 @@ public:
 	}
 
 	template <typename T, typename... TArgs> T &addComponent(TArgs &&...mArgs) {
-		T *c(new T(std::forward<TArgs>(mArgs)...));
-		c->entity = this;
-		std::unique_ptr<Component> uPtr{c};
+		// Create a unique_ptr for the component
+		std::shared_ptr<T> uPtr = std::make_unique<T>(std::forward<TArgs>(mArgs)...);
+		uPtr->entity = this;
+
+		// Store the unique_ptr in the components vector
 		components.emplace_back(std::move(uPtr));
+
+		// Get the raw pointer from the unique_ptr and cast it to the correct type
+		T *c = static_cast<T*>(components.back().get());
 
 		componentArray[getComponentTypeID<T>()] = c;
 		componentBitSet[getComponentTypeID<T>()] = true;
