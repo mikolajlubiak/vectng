@@ -82,8 +82,8 @@ void Game::render() {
 }
 
 void Game::clean() {
-	SDL_DestroyWindow(window);
 	SDL_DestroyRenderer(renderer);
+	SDL_DestroyWindow(window);
 	SDL_Quit();
 	std::cout << "Game Cleaned!" << std::endl;
 }
