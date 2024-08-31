@@ -1,33 +1,32 @@
 #pragma once
 
-#include <string>
-#include <SDL2/SDL.h>
 #include "Components.hpp"
+#include <SDL2/SDL.h>
+#include <string>
 
-class ColliderComponent : public Component
-{
+class ColliderComponent : public Component {
 public:
-    SDL_Rect collider;
-    std::string tag;
+  SDL_Rect collider;
+  std::string tag;
 
-    TransformComponent* transform;
+  std::shared_ptr<TransformComponent> transform;
 
-    ColliderComponent(std::string t) {
-        tag = t;
+  ColliderComponent(std::string t) { tag = t; }
+
+  void init() override {
+    if (!entity->hasComponent<TransformComponent>()) {
+      entity->addComponent<TransformComponent>();
     }
 
-    void init() override {
-        if (!entity->hasComponent<TransformComponent>()) {
-            entity->addComponent<TransformComponent>();
-        }
+    transform = entity->getComponentPtr<TransformComponent>();
 
-        transform = &entity->getComponent<TransformComponent>();
-    }
+    Game::colliders.push_back(entity->getComponentPtr<ColliderComponent>());
+  }
 
-    void update() override {
-        collider.x = transform->position.x;
-        collider.y = transform->position.y;
-        collider.w = transform->width * transform->scale;
-        collider.h = transform->height * transform->scale;
-    }
+  void update() override {
+    collider.x = transform->position.x;
+    collider.y = transform->position.y;
+    collider.w = transform->width * transform->scale;
+    collider.h = transform->height * transform->scale;
+  }
 };
