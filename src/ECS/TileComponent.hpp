@@ -12,13 +12,13 @@ public:
   std::shared_ptr<SpriteComponent> sprite;
 
   SDL_Rect tileRect;
-  uint_fast32_t tileID;
+  tileType tileID;
   std::string path;
 
   TileComponent() = default;
 
   TileComponent(uint_fast32_t x, uint_fast32_t y, uint_fast32_t w,
-                uint_fast32_t h, uint_fast32_t id) {
+                uint_fast32_t h, tileType id) {
     tileRect.x = x;
     tileRect.y = y;
     tileRect.w = w;
@@ -26,14 +26,14 @@ public:
     tileID = id;
 
     switch (tileID) {
-    case 0:
+    case dirtTile:
+      path = "assets/Tiles/dirt.png";
+      break;
+    case grassTile:
       path = "assets/Tiles/grass.png";
       break;
-    case 1:
+    case waterTile:
       path = "assets/Tiles/liquidWater.png";
-      break;
-    case 2:
-      path = "assets/Tiles/dirt.png";
       break;
     default:
       break;

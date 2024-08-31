@@ -15,9 +15,14 @@ SDL_Event Game::event;
 std::vector<std::shared_ptr<ColliderComponent>> Game::colliders;
 
 auto &player(manager.addEntity());
-auto &wall(manager.addEntity());
 auto &enemy(manager.addEntity());
-auto &tile(manager.addEntity());
+
+enum groupLabels : std::size_t {
+  mapGroup,
+  playerGroup,
+  enemyGroup,
+  ColliderGroup,
+};
 
 bool Game::isRunning = false;
 
@@ -50,21 +55,18 @@ void Game::init(const char *title, uint_fast32_t xpos, uint_fast32_t ypos,
 
   map = std::make_unique<Map>();
 
+  Map::LoadMap("assets/Maps/tilemap16x16.txt", 16, 16);
+
   player.addComponent<TransformComponent>(500.0f, 500.0f, 92, 66, 1);
   player.addComponent<SpriteComponent>("assets/Player/p1_front.png");
   player.addComponent<KeyboardController>();
   player.addComponent<ColliderComponent>("player");
+  player.addGroup(playerGroup);
 
   enemy.addComponent<TransformComponent>(100.0f, 100.0f, 92, 66, 1);
   enemy.addComponent<SpriteComponent>("assets/Player/p2_front.png");
   enemy.addComponent<ColliderComponent>("enemy");
-
-  wall.addComponent<TransformComponent>(300.0f, 300.0f, 100, 100, 1);
-  wall.addComponent<SpriteComponent>("assets/Tiles/dirt.png");
-  wall.addComponent<ColliderComponent>("wall");
-
-  tile.addComponent<TileComponent>(600, 600, 70, 70, 1);
-  tile.addComponent<ColliderComponent>("water");
+  enemy.addGroup(enemyGroup);
 }
 
 void Game::update() {
@@ -75,15 +77,30 @@ void Game::update() {
   for (std::shared_ptr<ColliderComponent> coll : colliders) {
     if (Collision::AABB(player.getComponent<ColliderComponent>(), *coll) &&
         (player.getComponent<ColliderComponent>().tag != coll->tag)) {
-      player.getComponent<TransformComponent>().velocity * -1;
+      player.getComponent<TransformComponent>().velocity * -1.0f;
     }
   }
 }
 
+auto &tiles(manager.getGroup(mapGroup));
+auto &players(manager.getGroup(playerGroup));
+auto &enemies(manager.getGroup(enemyGroup));
+
 void Game::render() {
   SDL_RenderClear(renderer);
-  map->DrawMap();
-  manager.draw();
+
+  for (auto &t : tiles) {
+    t->draw();
+  }
+
+  for (auto &p : players) {
+    p->draw();
+  }
+
+  for (auto &e : enemies) {
+    e->draw();
+  }
+
   SDL_RenderPresent(renderer);
 }
 
@@ -92,4 +109,14 @@ void Game::clean() {
   SDL_DestroyWindow(window);
   SDL_Quit();
   std::cout << "Game Cleaned!" << std::endl;
+}
+
+void Game::AddTile(tileType id, uint_fast32_t x, uint_fast32_t y) {
+  auto &tile(manager.addEntity());
+  tile.addComponent<TileComponent>(x, y, 68, 68, id);
+  tile.addGroup(mapGroup);
+
+  if (id == waterTile) {
+    tile.addComponent<ColliderComponent>("water");
+  }
 }

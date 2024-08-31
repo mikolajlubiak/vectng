@@ -1,18 +1,14 @@
 #pragma once
-#include "Game.hpp"
+#include <stdint.h>
+#include <string>
 
 class Map {
 public:
-  Map();
-  ~Map();
+  Map() = default;
+  ~Map() = default;
 
-  void LoadMap(const uint_fast32_t[32][32]);
-  void DrawMap();
+  static void LoadMap(const std::string path, uint_fast32_t size_x,
+                      uint_fast32_t size_y);
 
 private:
-  SDL_Rect src, dest;
-  SDL_Texture *dirt;
-  SDL_Texture *grass;
-  SDL_Texture *water;
-  uint_fast32_t map[32][32];
 };
