@@ -78,6 +78,7 @@ void Game::update() {
     if (Collision::AABB(player.getComponent<ColliderComponent>(), *coll) &&
         (player.getComponent<ColliderComponent>().tag != coll->tag)) {
       player.getComponent<TransformComponent>().velocity * -1.0f;
+      break;
     }
   }
 }
