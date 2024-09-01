@@ -77,7 +77,16 @@ void Game::update() {
   for (std::shared_ptr<ColliderComponent> coll : colliders) {
     if (Collision::AABB(player.getComponent<ColliderComponent>(), *coll) &&
         (player.getComponent<ColliderComponent>().tag != coll->tag)) {
-      player.getComponent<TransformComponent>().velocity * -1.0f;
+
+      Vector2D normalizedVelocity =
+          player.getComponent<TransformComponent>().velocity;
+      normalizedVelocity.Normalize();
+
+      player.getComponent<TransformComponent>().position +=
+          normalizedVelocity * -10;
+
+      player.getComponent<TransformComponent>().velocity * -1;
+
       break;
     }
   }

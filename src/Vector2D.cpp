@@ -1,4 +1,5 @@
 #include "Vector2D.hpp"
+#include "math.h"
 
 Vector2D::Vector2D() {
   x = 0.0f;
@@ -68,6 +69,17 @@ Vector2D &Vector2D::operator*(const int_fast32_t &i) {
 Vector2D &Vector2D::Zero() {
   this->x = 0.0f;
   this->y = 0.0f;
+
+  return *this;
+}
+
+Vector2D &Vector2D::Normalize() {
+  float length = sqrt(x * x + y * y);
+
+  if (length != 0.0f) {
+    this->x /= length;
+    this->y /= length;
+  }
 
   return *this;
 }
