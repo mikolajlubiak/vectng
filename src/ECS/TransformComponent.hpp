@@ -6,6 +6,7 @@
 
 struct TransformComponent : public Component {
 public:
+  Vector2D old_positon;
   Vector2D position;
   Vector2D velocity;
 

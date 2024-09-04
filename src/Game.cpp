@@ -58,21 +58,38 @@ void Game::init(const char *title, uint_fast32_t xpos, uint_fast32_t ypos,
   Map::LoadMap("assets/Maps/tilemap16x16.txt", 16, 16);
 
   player.addComponent<TransformComponent>(500.0f, 500.0f, 92, 66, 1);
-  player.addComponent<SpriteComponent>("assets/Player/p1_front.png");
+  player.addComponent<SpriteComponent>(
+      "assets/Player/p1_spritesheet.png", "assets/Player/p1_spritesheet.txt",
+      std::array<std::string, 2>{{"p1_stand", "p1_walk"}});
   player.addComponent<KeyboardController>();
   player.addComponent<ColliderComponent>("player");
   player.addGroup(playerGroup);
 
   enemy.addComponent<TransformComponent>(100.0f, 100.0f, 92, 66, 1);
-  enemy.addComponent<SpriteComponent>("assets/Player/p2_front.png");
+  enemy.addComponent<SpriteComponent>(
+      "assets/Player/p2_spritesheet.png", "assets/Player/p2_spritesheet.txt",
+      std::array<std::string, 2>{{"p2_stand", "p2_walk"}});
+
   enemy.addComponent<ColliderComponent>("enemy");
   enemy.addGroup(enemyGroup);
 }
 
 void Game::update() {
+  player.getComponent<TransformComponent>().old_positon =
+      player.getComponent<TransformComponent>().position;
+
   manager.refresh();
   manager.update();
+
+  if (player.getComponent<TransformComponent>().old_positon !=
+      player.getComponent<TransformComponent>().position) {
+    player.getComponent<SpriteComponent>().play("walk");
+  } else {
+    player.getComponent<SpriteComponent>().play("idle");
+  }
+
   enemy.getComponent<TransformComponent>().position.Add(Vector2D(2.0f, 2.0f));
+  enemy.getComponent<SpriteComponent>().play("walk");
 
   for (std::shared_ptr<ColliderComponent> coll : colliders) {
     if (Collision::AABB(player.getComponent<ColliderComponent>(), *coll) &&

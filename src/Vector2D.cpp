@@ -88,3 +88,19 @@ std::ostream &operator<<(std::ostream &stream, const Vector2D &vec) {
   stream << "(" << vec.x << "," << vec.y << ")";
   return stream;
 }
+
+bool operator==(const Vector2D &v1, const Vector2D &v2) {
+  if (v1.x == v2.x && v1.y == v2.y) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+bool operator!=(const Vector2D &v1, const Vector2D &v2) {
+  if (v1 == v2) {
+    return false;
+  } else {
+    return true;
+  }
+}

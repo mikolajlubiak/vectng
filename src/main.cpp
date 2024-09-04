@@ -6,8 +6,8 @@ int main() {
   const uint_fast32_t FPS = 60;
   const uint_fast32_t FRAME_DELAY = 1000 / FPS;
 
-  uint_fast32_t frameStart;
-  uint_fast32_t frameTime;
+  uint_fast64_t frameStart;
+  uint_fast64_t frameTime;
 
   game = new Game;
 
@@ -15,7 +15,7 @@ int main() {
              false);
 
   while (game->running()) {
-    frameStart = SDL_GetTicks();
+    frameStart = SDL_GetTicks64();
 
     game->update();
     game->render();
