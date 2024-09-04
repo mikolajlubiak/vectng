@@ -10,7 +10,7 @@ struct Animation {
   const std::vector<SDL_Rect> sprites;
   uint_fast64_t frame_delay;
 
-  Animation(const std::vector<SDL_Rect> sprites, uint_fast64_t frame_delay)
+  Animation(const std::vector<SDL_Rect> &sprites, uint_fast64_t frame_delay)
       : sprites(std::move(sprites)), frame_delay(frame_delay) {}
 };
 
