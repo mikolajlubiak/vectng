@@ -83,7 +83,15 @@ void Game::update() {
 
   if (player.getComponent<TransformComponent>().old_positon !=
       player.getComponent<TransformComponent>().position) {
+
     player.getComponent<SpriteComponent>().play("walk");
+
+    if (player.getComponent<TransformComponent>().old_positon.x >
+        player.getComponent<TransformComponent>().position.x) {
+      player.getComponent<SpriteComponent>().spriteFlip = SDL_FLIP_HORIZONTAL;
+    } else {
+      player.getComponent<SpriteComponent>().spriteFlip = SDL_FLIP_NONE;
+    }
   } else {
     player.getComponent<SpriteComponent>().play("idle");
   }

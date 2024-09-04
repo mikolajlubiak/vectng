@@ -20,6 +20,8 @@ private:
   std::unordered_map<std::string, Animation> animations;
 
 public:
+  SDL_RendererFlip spriteFlip = SDL_FLIP_NONE;
+
   SpriteComponent() = default;
   SpriteComponent(const std::string &path) { setTex(path); }
   ~SpriteComponent() { SDL_DestroyTexture(texture); }
@@ -34,7 +36,7 @@ public:
     setTex(sprite_sheet_path);
 
     Animation idle(getSpritesVector(searchTerms[0], spriteSheetData), 1);
-    Animation walk(getSpritesVector(searchTerms[1], spriteSheetData), 100);
+    Animation walk(getSpritesVector(searchTerms[1], spriteSheetData), 80);
 
     animations["idle"] = idle;
     animations["walk"] = walk;
@@ -69,7 +71,9 @@ public:
     destRect.h = transform->height * transform->scale;
   }
 
-  void draw() override { TextureManager::Draw(texture, srcRect, destRect); }
+  void draw() override {
+    TextureManager::Draw(texture, srcRect, destRect, spriteFlip);
+  }
 
   void play(const std::string &animName) {
     srcRect =
