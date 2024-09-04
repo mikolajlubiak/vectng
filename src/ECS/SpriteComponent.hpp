@@ -38,8 +38,8 @@ public:
     Animation idle(getSpritesVector(searchTerms[0], spriteSheetData), 1);
     Animation walk(getSpritesVector(searchTerms[1], spriteSheetData), 80);
 
-    animations["idle"] = idle;
-    animations["walk"] = walk;
+    animations.emplace("idle", idle);
+    animations.emplace("walk", walk);
 
     play("idle");
   }
@@ -76,11 +76,13 @@ public:
   }
 
   void play(const std::string &animName) {
-    srcRect =
-        spriteSheetData[animations[animName]
-                            .sprites[static_cast<uint_fast64_t>(
-                                         SDL_GetTicks64() /
-                                         animations[animName].frame_delay) %
-                                     animations[animName].sprites.size()]];
+    const auto &animData = animations.at(animName);
+
+    uint_fast64_t currentFrame = SDL_GetTicks64() / animData.frame_delay;
+
+    uint_fast64_t index =
+        static_cast<uint_fast64_t>(currentFrame % animData.sprites.size());
+
+    srcRect = animData.sprites[index];
   }
 };

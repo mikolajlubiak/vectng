@@ -7,20 +7,16 @@
 #include <vector>
 
 struct Animation {
-  std::vector<std::string> sprites;
-  uint_fast32_t frame_delay;
+  const std::vector<SDL_Rect> sprites;
+  uint_fast64_t frame_delay;
 
-  Animation() = default;
-
-  Animation(std::vector<std::string> sprites, uint_fast32_t frame_delay) {
-    this->sprites = sprites;
-    this->frame_delay = frame_delay;
-  };
+  Animation(const std::vector<SDL_Rect> sprites, uint_fast64_t frame_delay)
+      : sprites(std::move(sprites)), frame_delay(frame_delay) {}
 };
 
 std::unordered_map<std::string, SDL_Rect>
 parseSpriteSheetData(const std::string &path);
 
-std::vector<std::string> getSpritesVector(
+std::vector<SDL_Rect> getSpritesVector(
     const std::string &searchTerm,
     const std::unordered_map<std::string, SDL_Rect> &spriteSheetData);

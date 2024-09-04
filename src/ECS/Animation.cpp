@@ -48,18 +48,24 @@ parseSpriteSheetData(const std::string &path) {
   return spriteSheetData;
 }
 
-std::vector<std::string> getSpritesVector(
+std::vector<SDL_Rect> getSpritesVector(
     const std::string &searchTerm,
     const std::unordered_map<std::string, SDL_Rect> &spriteSheetData) {
-  std::vector<std::string> filteredRects;
+
+  std::vector<std::string> filteredNames;
 
   for (const auto &[name, _] : spriteSheetData) {
     if (name.compare(0, searchTerm.length(), searchTerm) == 0) {
-      filteredRects.push_back(name);
+      filteredNames.emplace_back(name);
     }
   }
 
-  std::sort(filteredRects.begin(), filteredRects.end());
+  std::sort(filteredNames.begin(), filteredNames.end());
 
-  return filteredRects;
+  std::vector<SDL_Rect> rects;
+  for (const auto &name : filteredNames) {
+    rects.emplace_back(spriteSheetData.at(name));
+  }
+
+  return rects;
 }
