@@ -3,7 +3,7 @@
 #include <SDL2/SDL_render.h>
 #include <fstream>
 
-void Map::LoadMap(const std::string path, uint_fast32_t size_x,
+void Map::LoadMap(const std::string &path, uint_fast32_t size_x,
                   uint_fast32_t size_y) {
   char tile;
   std::ifstream mapFile;
