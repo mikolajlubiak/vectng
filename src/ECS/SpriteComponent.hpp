@@ -78,7 +78,7 @@ public:
   void play(const std::string &animName) {
     srcRect =
         spriteSheetData[animations[animName]
-                            .sprites[static_cast<uint_fast32_t>(
+                            .sprites[static_cast<uint_fast64_t>(
                                          SDL_GetTicks64() /
                                          animations[animName].frame_delay) %
                                      animations[animName].sprites.size()]];
