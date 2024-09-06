@@ -20,8 +20,9 @@ public:
 
   TileComponent(const std::string &sprite_sheet_path,
                 const SDL_Rect &gameMapTile, const SDL_Rect &tilemapTile)
-      : path(std::move(sprite_sheet_path)), tilemapTile(std::move(tilemapTile)),
-        gameMapTile(std::move(gameMapTile)) {}
+      : gameMapTile(std::move(gameMapTile)),
+        tilemapTile(std::move(tilemapTile)),
+        path(std::move(sprite_sheet_path)) {}
 
   void init() override {
     entity->addComponent<TransformComponent>(static_cast<float>(gameMapTile.x),

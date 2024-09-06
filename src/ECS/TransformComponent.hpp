@@ -6,7 +6,6 @@
 
 struct TransformComponent : public Component {
 public:
-  Vector2D old_positon;
   Vector2D position;
   Vector2D velocity;
 
@@ -16,11 +15,15 @@ public:
 
   uint_fast32_t speed = 3;
 
+  bool isInAir = false;
+
   TransformComponent() { position.Zero(); }
+
   TransformComponent(float x, float y) {
     position.x = x;
     position.y = y;
   }
+
   TransformComponent(float x, float y, uint_fast32_t h, uint_fast32_t w,
                      uint_fast32_t sc) {
     position.x = x;
@@ -29,12 +32,14 @@ public:
     width = w;
     scale = sc;
   }
+
   TransformComponent(int_fast32_t sc) {
     position.Zero();
     scale = sc;
   }
 
   void init() override { velocity.Zero(); }
+
   void update() override {
     position.x += velocity.x * speed;
     position.y += velocity.y * speed;

@@ -21,7 +21,6 @@ enum groupLabels : std::size_t {
   mapGroup,
   playerGroup,
   enemyGroup,
-  ColliderGroup,
 };
 
 bool Game::isRunning = false;
@@ -58,43 +57,30 @@ void Game::init(const char *title, uint_fast32_t xpos, uint_fast32_t ypos,
   Map::LoadMap("assets/Maps/tilemap20x20.txt", 18, 10);
 
   player.addComponent<TransformComponent>(20.0f, 500.0f, 92, 66, 1);
+
   player.addComponent<SpriteComponent>(
       "assets/Player/p1_spritesheet.png", "assets/Player/p1_spritesheet.txt",
-      std::array<std::string, 2>{{"p1_stand", "p1_walk"}});
+      std::array<std::string, 3>{{"p1_stand", "p1_walk", "p1_jump"}});
+
   player.addComponent<KeyboardController>();
   player.addComponent<ColliderComponent>("player");
   player.addGroup(playerGroup);
 
   enemy.addComponent<TransformComponent>(100.0f, 100.0f, 92, 66, 1);
+
   enemy.addComponent<SpriteComponent>(
       "assets/Player/p2_spritesheet.png", "assets/Player/p2_spritesheet.txt",
-      std::array<std::string, 2>{{"p2_stand", "p2_walk"}});
+      std::array<std::string, 3>{{"p2_stand", "p2_walk", "p2_jump"}});
 
   enemy.addComponent<ColliderComponent>("enemy");
   enemy.addGroup(enemyGroup);
 }
 
 void Game::update() {
-  player.getComponent<TransformComponent>().old_positon =
-      player.getComponent<TransformComponent>().position;
-
   manager.refresh();
   manager.update();
 
-  if (player.getComponent<TransformComponent>().old_positon !=
-      player.getComponent<TransformComponent>().position) {
-
-    player.getComponent<SpriteComponent>().play("walk");
-
-    if (player.getComponent<TransformComponent>().old_positon.x >
-        player.getComponent<TransformComponent>().position.x) {
-      player.getComponent<SpriteComponent>().spriteFlip = SDL_FLIP_HORIZONTAL;
-    } else {
-      player.getComponent<SpriteComponent>().spriteFlip = SDL_FLIP_NONE;
-    }
-  } else {
-    player.getComponent<SpriteComponent>().play("idle");
-  }
+  player.getComponent<TransformComponent>().velocity.y += 0.5f;
 
   enemy.getComponent<TransformComponent>().position.Add(Vector2D(2.0f, 2.0f));
   enemy.getComponent<SpriteComponent>().play("walk");
@@ -103,24 +89,49 @@ void Game::update() {
     if (Collision::AABB(player.getComponent<ColliderComponent>(), *coll) &&
         (player.getComponent<ColliderComponent>().tag != coll->tag)) {
 
-      if (coll->tag == "Collider tile") {
+      if (coll->tag == "floor_tile" &&
+          player.getComponent<TransformComponent>().position.y <=
+              coll->entity->getComponent<TransformComponent>().position.y -
+                  coll->entity->getComponent<TransformComponent>().height) {
+
         player.getComponent<TransformComponent>().position.y =
             coll->entity->getComponent<TransformComponent>().position.y -
             player.getComponent<TransformComponent>().height;
+
+        player.getComponent<TransformComponent>().isInAir = false;
+
+        player.getComponent<TransformComponent>().velocity.y = std::min(
+            0.0f, player.getComponent<TransformComponent>().velocity.y);
       } else {
 
-        Vector2D normalizedVelocity =
-            player.getComponent<TransformComponent>().velocity;
+        Vector2D normalizedVelocity;
+        normalizedVelocity.x =
+            player.getComponent<TransformComponent>().velocity.x;
         normalizedVelocity.Normalize();
 
-        player.getComponent<TransformComponent>().position +=
-            normalizedVelocity * -10;
-
-        player.getComponent<TransformComponent>().velocity * -1;
+        player.getComponent<TransformComponent>().position.x +=
+            normalizedVelocity.x * -10.0f;
       }
-
-      break;
     }
+  }
+
+  if (player.getComponent<TransformComponent>().velocity.x != 0.0f) {
+
+    player.getComponent<SpriteComponent>().play("walk");
+
+    if (player.getComponent<TransformComponent>().velocity.x < 0.0f) {
+      player.getComponent<SpriteComponent>().spriteFlip = SDL_FLIP_HORIZONTAL;
+
+    } else {
+      player.getComponent<SpriteComponent>().spriteFlip = SDL_FLIP_NONE;
+    }
+
+  } else if (player.getComponent<TransformComponent>().velocity.y < 0.0f) {
+
+    player.getComponent<SpriteComponent>().play("jump");
+
+  } else {
+    player.getComponent<SpriteComponent>().play("idle");
   }
 }
 
@@ -158,7 +169,7 @@ void Game::AddTile(const uint_fast32_t tileNumber, const uint_fast32_t mapX,
   const std::string sprite_sheet_path = "assets/Tiles/tiles_spritesheet.png";
   constexpr uint_fast32_t tilemapRowSize = 12;
   constexpr uint_fast32_t tileSize = 72;
-  constexpr std::array<uint_fast32_t, 2> colliderTiles{104, 153};
+  constexpr std::array<uint_fast32_t, 2> floorTiles{104, 153};
 
   SDL_Rect gameMapTile;
   SDL_Rect tilemapTile;
@@ -178,10 +189,10 @@ void Game::AddTile(const uint_fast32_t tileNumber, const uint_fast32_t mapX,
 
   tile.addComponent<TileComponent>(sprite_sheet_path, gameMapTile, tilemapTile);
 
-  if (std::find(colliderTiles.begin(), colliderTiles.end(), tileNumber + 1) !=
-      colliderTiles.end()) {
-    tile.addComponent<ColliderComponent>("Collider tile");
-  }
-
   tile.addGroup(mapGroup);
+
+  if (std::find(floorTiles.begin(), floorTiles.end(), tileNumber + 1) !=
+      floorTiles.end()) {
+    tile.addComponent<ColliderComponent>("floor_tile");
+  }
 }

@@ -29,7 +29,7 @@ public:
 
   SpriteComponent(const std::string &sprite_sheet_path,
                   const std::string &sprite_sheet_data_path,
-                  const std::array<std::string, 2> &searchTerms) {
+                  const std::array<std::string, 3> &searchTerms) {
     usesSpritesheet = true;
     animated = true;
 
@@ -39,9 +39,11 @@ public:
 
     Animation idle(getSpritesVector(searchTerms[0], spriteSheetData), 1);
     Animation walk(getSpritesVector(searchTerms[1], spriteSheetData), 80);
+    Animation jump(getSpritesVector(searchTerms[2], spriteSheetData), 1);
 
     animations.emplace("idle", idle);
     animations.emplace("walk", walk);
+    animations.emplace("jump", jump);
 
     play("idle");
   }
