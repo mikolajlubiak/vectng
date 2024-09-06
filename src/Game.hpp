@@ -7,12 +7,6 @@
 
 class ColliderComponent;
 
-enum tileType : std::size_t {
-  waterTile = 2,
-  dirtTile = 0,
-  grassTile = 1,
-};
-
 class Game {
 public:
   void init(const char *title, uint_fast32_t xpos, uint_fast32_t ypos,
@@ -23,7 +17,8 @@ public:
   void clean();
   bool running() { return isRunning; }
 
-  static void AddTile(tileType id, uint_fast32_t x, uint_fast32_t y);
+  static void AddTile(const uint_fast32_t tileNumber, const uint_fast32_t mapX,
+                      const uint_fast32_t mapY);
 
   static SDL_Renderer *renderer;
   static SDL_Event event;

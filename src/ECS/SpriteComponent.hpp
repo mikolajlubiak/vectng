@@ -15,6 +15,7 @@ private:
   SDL_Texture *texture;
   SDL_Rect srcRect, destRect;
 
+  bool usesSpritesheet = false;
   bool animated = false;
   std::unordered_map<std::string, SDL_Rect> spriteSheetData;
   std::unordered_map<std::string, Animation> animations;
@@ -29,6 +30,7 @@ public:
   SpriteComponent(const std::string &sprite_sheet_path,
                   const std::string &sprite_sheet_data_path,
                   const std::array<std::string, 2> &searchTerms) {
+    usesSpritesheet = true;
     animated = true;
 
     spriteSheetData = parseSpriteSheetData(sprite_sheet_data_path);
@@ -44,6 +46,14 @@ public:
     play("idle");
   }
 
+  SpriteComponent(const std::string &sprite_sheet_path,
+                  const SDL_Rect &tileRect)
+      : srcRect(std::move(tileRect)) {
+    usesSpritesheet = true;
+
+    setTex(sprite_sheet_path);
+  }
+
   void setTex(const std::string &path) {
     texture = TextureManager::LoadTexture(path);
   }
@@ -51,7 +61,7 @@ public:
   void init() override {
     transform = entity->getComponentPtr<TransformComponent>();
 
-    if (!animated) {
+    if (!usesSpritesheet) {
       srcRect.x = srcRect.y = 0;
       srcRect.w = transform->width;
       srcRect.h = transform->height;

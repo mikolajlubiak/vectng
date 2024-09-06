@@ -55,9 +55,9 @@ void Game::init(const char *title, uint_fast32_t xpos, uint_fast32_t ypos,
 
   map = std::make_unique<Map>();
 
-  Map::LoadMap("assets/Maps/tilemap16x16.txt", 16, 16);
+  Map::LoadMap("assets/Maps/tilemap20x20.txt", 18, 10);
 
-  player.addComponent<TransformComponent>(500.0f, 500.0f, 92, 66, 1);
+  player.addComponent<TransformComponent>(20.0f, 500.0f, 92, 66, 1);
   player.addComponent<SpriteComponent>(
       "assets/Player/p1_spritesheet.png", "assets/Player/p1_spritesheet.txt",
       std::array<std::string, 2>{{"p1_stand", "p1_walk"}});
@@ -103,14 +103,21 @@ void Game::update() {
     if (Collision::AABB(player.getComponent<ColliderComponent>(), *coll) &&
         (player.getComponent<ColliderComponent>().tag != coll->tag)) {
 
-      Vector2D normalizedVelocity =
-          player.getComponent<TransformComponent>().velocity;
-      normalizedVelocity.Normalize();
+      if (coll->tag == "Collider tile") {
+        player.getComponent<TransformComponent>().position.y =
+            coll->entity->getComponent<TransformComponent>().position.y -
+            player.getComponent<TransformComponent>().height;
+      } else {
 
-      player.getComponent<TransformComponent>().position +=
-          normalizedVelocity * -10;
+        Vector2D normalizedVelocity =
+            player.getComponent<TransformComponent>().velocity;
+        normalizedVelocity.Normalize();
 
-      player.getComponent<TransformComponent>().velocity * -1;
+        player.getComponent<TransformComponent>().position +=
+            normalizedVelocity * -10;
+
+        player.getComponent<TransformComponent>().velocity * -1;
+      }
 
       break;
     }
@@ -146,12 +153,35 @@ void Game::clean() {
   std::cout << "Game Cleaned!" << std::endl;
 }
 
-void Game::AddTile(tileType id, uint_fast32_t x, uint_fast32_t y) {
-  auto &tile(manager.addEntity());
-  tile.addComponent<TileComponent>(x, y, 68, 68, id);
-  tile.addGroup(mapGroup);
+void Game::AddTile(const uint_fast32_t tileNumber, const uint_fast32_t mapX,
+                   const uint_fast32_t mapY) {
+  const std::string sprite_sheet_path = "assets/Tiles/tiles_spritesheet.png";
+  constexpr uint_fast32_t tilemapRowSize = 12;
+  constexpr uint_fast32_t tileSize = 72;
+  constexpr std::array<uint_fast32_t, 2> colliderTiles{104, 153};
 
-  if (id == waterTile) {
-    tile.addComponent<ColliderComponent>("water");
+  SDL_Rect gameMapTile;
+  SDL_Rect tilemapTile;
+
+  tilemapTile.x = tileSize * (tileNumber % tilemapRowSize);
+  tilemapTile.y =
+      tileSize * std::floor(static_cast<float>(tileNumber) / tilemapRowSize);
+  tilemapTile.w = tileSize;
+  tilemapTile.h = tileSize;
+
+  gameMapTile.x = mapX * tileSize;
+  gameMapTile.y = mapY * tileSize;
+  gameMapTile.w = tileSize;
+  gameMapTile.h = tileSize;
+
+  auto &tile(manager.addEntity());
+
+  tile.addComponent<TileComponent>(sprite_sheet_path, gameMapTile, tilemapTile);
+
+  if (std::find(colliderTiles.begin(), colliderTiles.end(), tileNumber + 1) !=
+      colliderTiles.end()) {
+    tile.addComponent<ColliderComponent>("Collider tile");
   }
+
+  tile.addGroup(mapGroup);
 }
