@@ -59,6 +59,7 @@ void Game::init(const char *title, uint_fast32_t xpos, uint_fast32_t ypos,
   player.addComponent<TransformComponent>(20.0f, 500.0f, 92, 66, 1);
   player.addComponent<ColliderComponent>("player");
   player.addComponent<GravityComponent>();
+  player.addComponent<CollisionResolver>();
 
   player.addComponent<SpriteComponent>(
       "assets/Player/p1_spritesheet.png", "assets/Player/p1_spritesheet.txt",
@@ -70,6 +71,7 @@ void Game::init(const char *title, uint_fast32_t xpos, uint_fast32_t ypos,
   enemy.addComponent<TransformComponent>(100.0f, 500.0f, 92, 66, 1);
   enemy.addComponent<ColliderComponent>("enemy");
   enemy.addComponent<GravityComponent>();
+  enemy.addComponent<CollisionResolver>();
 
   enemy.addComponent<SpriteComponent>(
       "assets/Player/p2_spritesheet.png", "assets/Player/p2_spritesheet.txt",
@@ -88,42 +90,6 @@ void Game::update() {
     enemy.getComponent<TransformComponent>().velocity.y =
         enemy.getComponent<GravityComponent>().jumpVelocity;
     enemy.getComponent<GravityComponent>().isInAir = true;
-  }
-
-  for (std::shared_ptr<ColliderComponent> coll1 : Game ::colliders) {
-    for (std::shared_ptr<ColliderComponent> coll2 : Game ::colliders) {
-      if (Collision::AABB(*coll1, *coll2) && (coll1->tag != coll2->tag)) {
-
-        if (coll1->entity->hasComponent<GravityComponent>()) {
-          if (!coll1->entity->getComponent<GravityComponent>().gravityCollision(
-                  coll2)) {
-
-            float directionX = 0.0f;
-
-            if (coll1->entity->getComponent<TransformComponent>().velocity.x !=
-                0.0f) {
-              directionX =
-                  coll1->entity->getComponent<TransformComponent>().velocity.x /
-                  std::abs(coll1->entity->getComponent<TransformComponent>()
-                               .velocity.x);
-            }
-
-            coll1->entity->getComponent<TransformComponent>().position.x +=
-                directionX * -3.0f;
-          }
-
-        } else {
-
-          Vector2D normalizedVelocity =
-              coll1->entity->getComponent<TransformComponent>().velocity;
-
-          normalizedVelocity.Normalize();
-
-          coll1->entity->getComponent<TransformComponent>().position +=
-              normalizedVelocity * -3.0f;
-        }
-      }
-    }
   }
 }
 
