@@ -1,5 +1,6 @@
 #pragma once
 
+#include "../Game.hpp"
 #include "Components.hpp"
 #include <SDL2/SDL.h>
 #include <string>

@@ -4,7 +4,7 @@
 #include "Components.hpp"
 #include <stdint.h>
 
-struct TransformComponent : public Component {
+class TransformComponent : public Component {
 public:
   Vector2D position;
   Vector2D velocity;
@@ -14,8 +14,6 @@ public:
   uint_fast32_t scale = 1;
 
   uint_fast32_t speed = 3;
-
-  bool isInAir = false;
 
   TransformComponent() { position.Zero(); }
 

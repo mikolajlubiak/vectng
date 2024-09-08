@@ -2,16 +2,19 @@
 
 #include "../Game.hpp"
 #include "Components.hpp"
-#include "ECS.hpp"
 
 class KeyboardController : public Component {
 public:
   std::shared_ptr<TransformComponent> transform;
-  std::shared_ptr<SpriteComponent> sprite;
+  std::shared_ptr<GravityComponent> gravity;
 
   void init() override {
+    if (!entity->hasComponent<GravityComponent>()) {
+      entity->addComponent<GravityComponent>();
+    }
+
     transform = entity->getComponentPtr<TransformComponent>();
-    sprite = entity->getComponentPtr<SpriteComponent>();
+    gravity = entity->getComponentPtr<GravityComponent>();
 
     SDL_EventState(SDL_MOUSEMOTION, SDL_IGNORE);
   }
@@ -23,9 +26,9 @@ public:
       case SDL_KEYDOWN:
         switch (Game::event.key.keysym.sym) {
         case SDLK_SPACE:
-          if (!transform->isInAir && transform->velocity.y >= 0.0f) {
-            transform->velocity.y += -6.0f;
-            transform->isInAir = true;
+          if (!gravity->isInAir && transform->velocity.y >= 0.0f) {
+            transform->velocity.y += gravity->jumpVelocity;
+            gravity->isInAir = true;
           }
           break;
         case SDLK_a:

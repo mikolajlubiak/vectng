@@ -1,8 +1,6 @@
 #pragma once
 
-#include "ECS.hpp"
-#include "SpriteComponent.hpp"
-#include "TransformComponent.hpp"
+#include "Components.hpp"
 #include <SDL2/SDL.h>
 #include <memory>
 

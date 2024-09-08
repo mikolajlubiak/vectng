@@ -61,6 +61,10 @@ public:
   }
 
   void init() override {
+    if (!entity->hasComponent<TransformComponent>()) {
+      entity->addComponent<TransformComponent>();
+    }
+
     transform = entity->getComponentPtr<TransformComponent>();
 
     if (!usesSpritesheet) {
@@ -81,6 +85,27 @@ public:
 
     destRect.w = transform->width * transform->scale;
     destRect.h = transform->height * transform->scale;
+
+    if (animated) {
+
+      if (entity->getComponent<TransformComponent>().velocity.y < 0.0f &&
+          entity->hasComponent<GravityComponent>()) {
+        play("jump");
+      }
+
+      else if (entity->getComponent<TransformComponent>().velocity.x != 0.0f) {
+        play("walk");
+
+        if (entity->getComponent<TransformComponent>().velocity.x < 0.0f) {
+          spriteFlip = SDL_FLIP_HORIZONTAL;
+        } else {
+          spriteFlip = SDL_FLIP_NONE;
+        }
+
+      } else {
+        play("idle");
+      }
+    }
   }
 
   void draw() override {

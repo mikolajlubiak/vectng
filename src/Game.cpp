@@ -57,22 +57,24 @@ void Game::init(const char *title, uint_fast32_t xpos, uint_fast32_t ypos,
   Map::LoadMap("assets/Maps/tilemap20x20.txt", 18, 10);
 
   player.addComponent<TransformComponent>(20.0f, 500.0f, 92, 66, 1);
+  player.addComponent<ColliderComponent>("player");
+  player.addComponent<GravityComponent>();
 
   player.addComponent<SpriteComponent>(
       "assets/Player/p1_spritesheet.png", "assets/Player/p1_spritesheet.txt",
       std::array<std::string, 3>{{"p1_stand", "p1_walk", "p1_jump"}});
 
   player.addComponent<KeyboardController>();
-  player.addComponent<ColliderComponent>("player");
   player.addGroup(playerGroup);
 
-  enemy.addComponent<TransformComponent>(100.0f, 100.0f, 92, 66, 1);
+  enemy.addComponent<TransformComponent>(100.0f, 500.0f, 92, 66, 1);
+  enemy.addComponent<ColliderComponent>("enemy");
+  enemy.addComponent<GravityComponent>();
 
   enemy.addComponent<SpriteComponent>(
       "assets/Player/p2_spritesheet.png", "assets/Player/p2_spritesheet.txt",
       std::array<std::string, 3>{{"p2_stand", "p2_walk", "p2_jump"}});
 
-  enemy.addComponent<ColliderComponent>("enemy");
   enemy.addGroup(enemyGroup);
 }
 
@@ -80,58 +82,48 @@ void Game::update() {
   manager.refresh();
   manager.update();
 
-  player.getComponent<TransformComponent>().velocity.y += 0.5f;
+  enemy.getComponent<TransformComponent>().velocity.x = 0.5f;
 
-  enemy.getComponent<TransformComponent>().position.Add(Vector2D(2.0f, 2.0f));
-  enemy.getComponent<SpriteComponent>().play("walk");
-
-  for (std::shared_ptr<ColliderComponent> coll : colliders) {
-    if (Collision::AABB(player.getComponent<ColliderComponent>(), *coll) &&
-        (player.getComponent<ColliderComponent>().tag != coll->tag)) {
-
-      if (coll->tag == "floor_tile" &&
-          player.getComponent<TransformComponent>().position.y <=
-              coll->entity->getComponent<TransformComponent>().position.y -
-                  coll->entity->getComponent<TransformComponent>().height) {
-
-        player.getComponent<TransformComponent>().position.y =
-            coll->entity->getComponent<TransformComponent>().position.y -
-            player.getComponent<TransformComponent>().height;
-
-        player.getComponent<TransformComponent>().isInAir = false;
-
-        player.getComponent<TransformComponent>().velocity.y = std::min(
-            0.0f, player.getComponent<TransformComponent>().velocity.y);
-      } else {
-
-        Vector2D normalizedVelocity;
-        normalizedVelocity.x =
-            player.getComponent<TransformComponent>().velocity.x;
-        normalizedVelocity.Normalize();
-
-        player.getComponent<TransformComponent>().position.x +=
-            normalizedVelocity.x * -10.0f;
-      }
-    }
+  if (!enemy.getComponent<GravityComponent>().isInAir) {
+    enemy.getComponent<TransformComponent>().velocity.y =
+        enemy.getComponent<GravityComponent>().jumpVelocity;
+    enemy.getComponent<GravityComponent>().isInAir = true;
   }
 
-  if (player.getComponent<TransformComponent>().velocity.x != 0.0f) {
+  for (std::shared_ptr<ColliderComponent> coll1 : Game ::colliders) {
+    for (std::shared_ptr<ColliderComponent> coll2 : Game ::colliders) {
+      if (Collision::AABB(*coll1, *coll2) && (coll1->tag != coll2->tag)) {
 
-    player.getComponent<SpriteComponent>().play("walk");
+        if (coll1->entity->hasComponent<GravityComponent>()) {
+          if (!coll1->entity->getComponent<GravityComponent>().gravityCollision(
+                  coll2)) {
 
-    if (player.getComponent<TransformComponent>().velocity.x < 0.0f) {
-      player.getComponent<SpriteComponent>().spriteFlip = SDL_FLIP_HORIZONTAL;
+            float directionX = 0.0f;
 
-    } else {
-      player.getComponent<SpriteComponent>().spriteFlip = SDL_FLIP_NONE;
+            if (coll1->entity->getComponent<TransformComponent>().velocity.x !=
+                0.0f) {
+              directionX =
+                  coll1->entity->getComponent<TransformComponent>().velocity.x /
+                  std::abs(coll1->entity->getComponent<TransformComponent>()
+                               .velocity.x);
+            }
+
+            coll1->entity->getComponent<TransformComponent>().position.x +=
+                directionX * -10.0f;
+          }
+
+        } else {
+
+          Vector2D normalizedVelocity =
+              coll1->entity->getComponent<TransformComponent>().velocity;
+
+          normalizedVelocity.Normalize();
+
+          coll1->entity->getComponent<TransformComponent>().position +=
+              normalizedVelocity * -10.0f;
+        }
+      }
     }
-
-  } else if (player.getComponent<TransformComponent>().velocity.y < 0.0f) {
-
-    player.getComponent<SpriteComponent>().play("jump");
-
-  } else {
-    player.getComponent<SpriteComponent>().play("idle");
   }
 }
 
