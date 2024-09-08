@@ -109,7 +109,7 @@ void Game::update() {
             }
 
             coll1->entity->getComponent<TransformComponent>().position.x +=
-                directionX * -10.0f;
+                directionX * -3.0f;
           }
 
         } else {
@@ -120,7 +120,7 @@ void Game::update() {
           normalizedVelocity.Normalize();
 
           coll1->entity->getComponent<TransformComponent>().position +=
-              normalizedVelocity * -10.0f;
+              normalizedVelocity * -3.0f;
         }
       }
     }

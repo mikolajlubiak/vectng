@@ -38,7 +38,7 @@ public:
     setTex(sprite_sheet_path);
 
     Animation idle(getSpritesVector(searchTerms[0], spriteSheetData), 1);
-    Animation walk(getSpritesVector(searchTerms[1], spriteSheetData), 80);
+    Animation walk(getSpritesVector(searchTerms[1], spriteSheetData), 40);
     Animation jump(getSpritesVector(searchTerms[2], spriteSheetData), 1);
 
     animations.emplace("idle", idle);
