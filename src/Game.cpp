@@ -151,6 +151,11 @@ void Game::AddTile(const uint_fast32_t tileNumber, const uint_fast32_t mapX,
 
   if (std::find(floorTiles.begin(), floorTiles.end(), tileNumber + 1) !=
       floorTiles.end()) {
+
+    tile.addComponent<TransformComponent>(static_cast<float>(gameMapTile.x),
+                                          static_cast<float>(gameMapTile.y),
+                                          gameMapTile.h, gameMapTile.w, 1);
+
     tile.addComponent<ColliderComponent>("floor_tile");
   }
 }

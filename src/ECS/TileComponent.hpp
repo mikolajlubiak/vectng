@@ -6,15 +6,16 @@
 
 class TileComponent : public Component {
 public:
-  std::shared_ptr<TransformComponent> transform;
-  std::shared_ptr<SpriteComponent> sprite;
-
   SDL_Rect gameMapTile;
   SDL_Rect tilemapTile;
+
+  SDL_Texture *texture;
 
   std::string path;
 
   TileComponent() = default;
+
+  ~TileComponent() { SDL_DestroyTexture(texture); }
 
   TileComponent(const std::string &sprite_sheet_path,
                 const SDL_Rect &gameMapTile, const SDL_Rect &tilemapTile)
@@ -22,13 +23,9 @@ public:
         tilemapTile(std::move(tilemapTile)),
         path(std::move(sprite_sheet_path)) {}
 
-  void init() override {
-    entity->addComponent<TransformComponent>(static_cast<float>(gameMapTile.x),
-                                             static_cast<float>(gameMapTile.y),
-                                             gameMapTile.h, gameMapTile.w, 1);
-    transform = entity->getComponentPtr<TransformComponent>();
+  void init() override { texture = TextureManager::LoadTexture(path); }
 
-    entity->addComponent<SpriteComponent>(path, tilemapTile);
-    sprite = entity->getComponentPtr<SpriteComponent>();
+  void draw() override {
+    TextureManager::Draw(texture, tilemapTile, gameMapTile, SDL_FLIP_NONE);
   }
 };

@@ -48,14 +48,6 @@ public:
     play("idle");
   }
 
-  SpriteComponent(const std::string &sprite_sheet_path,
-                  const SDL_Rect &tileRect)
-      : srcRect(std::move(tileRect)) {
-    usesSpritesheet = true;
-
-    setTex(sprite_sheet_path);
-  }
-
   void setTex(const std::string &path) {
     texture = TextureManager::LoadTexture(path);
   }
@@ -88,8 +80,7 @@ public:
 
     if (animated) {
 
-      if (entity->getComponent<TransformComponent>().velocity.y < 0.0f &&
-          entity->hasComponent<GravityComponent>()) {
+      if (entity->getComponent<GravityComponent>().isInAir) {
         play("jump");
       }
 
