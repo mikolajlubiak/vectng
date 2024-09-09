@@ -19,39 +19,9 @@ public:
   GravityComponent(float gravityVelocity, float jumpVelocity)
       : gravityVelocity(gravityVelocity), jumpVelocity(jumpVelocity) {}
 
-  void init() override {
-    if (!entity->hasComponent<ColliderComponent>()) {
-      entity->addComponent<ColliderComponent>("gravity");
-    }
+  void init() override;
 
-    transform = entity->getComponentPtr<TransformComponent>();
-    collider = entity->getComponentPtr<ColliderComponent>();
-  }
+  void update() override;
 
-  void update() override {
-    transform->velocity.y += this->gravityVelocity;
-
-    for (std::shared_ptr<ColliderComponent> coll : Game::colliders) {
-      if (Collision::AABB(*collider, *coll) && (collider->tag != coll->tag)) {
-
-        if (gravityCollision(coll)) {
-
-          transform->position.y =
-              coll->entity->getComponent<TransformComponent>().position.y -
-              transform->height;
-
-          this->isInAir = false;
-
-          transform->velocity.y = std::min(0.0f, transform->velocity.y);
-        }
-      }
-    }
-  }
-
-  bool gravityCollision(std::shared_ptr<ColliderComponent> coll) {
-    return coll->tag == "floor_tile" &&
-           transform->position.y <=
-               coll->entity->getComponent<TransformComponent>().position.y -
-                   coll->entity->getComponent<TransformComponent>().height;
-  }
+  bool gravityCollision(std::shared_ptr<ColliderComponent> coll);
 };

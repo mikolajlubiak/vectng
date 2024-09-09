@@ -13,7 +13,7 @@ public:
   uint_fast32_t width = 0;
   uint_fast32_t scale = 1;
 
-  uint_fast32_t speed = 3;
+  uint_fast32_t speed = 2;
 
   TransformComponent() { position.Zero(); }
 
