@@ -15,5 +15,5 @@
 https://www.matsson.com/prog/sdl2-mingw-w64-tutorial
 
 # Compiling:
-    `make clean release`
+    make clean release
 
