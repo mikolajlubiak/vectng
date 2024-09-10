@@ -23,7 +23,6 @@ private:
 public:
   SDL_RendererFlip spriteFlip = SDL_FLIP_NONE;
 
-  SpriteComponent() = default;
   SpriteComponent(const std::string &path) { setTex(path); }
   ~SpriteComponent() { SDL_DestroyTexture(texture); }
 
@@ -52,65 +51,11 @@ public:
     texture = TextureManager::LoadTexture(path);
   }
 
-  void init() override {
-    if (!entity->hasComponent<TransformComponent>()) {
-      entity->addComponent<TransformComponent>();
-    }
+  void init() override;
 
-    transform = entity->getComponentPtr<TransformComponent>();
+  void update() override;
 
-    if (!usesSpritesheet) {
-      srcRect.x = srcRect.y = 0;
-      srcRect.w = transform->width;
-      srcRect.h = transform->height;
-    }
-  }
+  void draw() override;
 
-  void update() override {
-    if (animated) {
-      transform->height = srcRect.h;
-      transform->width = srcRect.w;
-    }
-
-    destRect.x = static_cast<int>(transform->position.x);
-    destRect.y = static_cast<int>(transform->position.y);
-
-    destRect.w = transform->width * transform->scale;
-    destRect.h = transform->height * transform->scale;
-
-    if (animated) {
-
-      if (entity->getComponent<GravityComponent>().isInAir) {
-        play("jump");
-      }
-
-      else if (entity->getComponent<TransformComponent>().velocity.x != 0.0f) {
-        play("walk");
-
-        if (entity->getComponent<TransformComponent>().velocity.x < 0.0f) {
-          spriteFlip = SDL_FLIP_HORIZONTAL;
-        } else {
-          spriteFlip = SDL_FLIP_NONE;
-        }
-
-      } else {
-        play("idle");
-      }
-    }
-  }
-
-  void draw() override {
-    TextureManager::Draw(texture, srcRect, destRect, spriteFlip);
-  }
-
-  void play(const std::string &animName) {
-    const auto &animData = animations.at(animName);
-
-    uint_fast64_t currentFrame = SDL_GetTicks64() / animData.frame_delay;
-
-    uint_fast64_t index =
-        static_cast<uint_fast64_t>(currentFrame % animData.sprites.size());
-
-    srcRect = animData.sprites[index];
-  }
+  void play(const std::string &animName);
 };

@@ -23,6 +23,12 @@ enum groupLabels : std::size_t {
   enemyGroup,
 };
 
+auto &tiles(manager.getGroup(mapGroup));
+auto &players(manager.getGroup(playerGroup));
+auto &enemies(manager.getGroup(enemyGroup));
+
+Vector2D initialPlayerPos{20.0f, 500.0f};
+
 bool Game::isRunning = false;
 
 void Game::init(const char *title, uint_fast32_t xpos, uint_fast32_t ypos,
@@ -52,11 +58,8 @@ void Game::init(const char *title, uint_fast32_t xpos, uint_fast32_t ypos,
     isRunning = false;
   }
 
-  map = std::make_unique<Map>();
-
-  Map::LoadMap("assets/Maps/tilemap20x20.txt", 18, 10);
-
-  player.addComponent<TransformComponent>(20.0f, 500.0f, 92, 66, 1);
+  player.addComponent<TransformComponent>(initialPlayerPos.x,
+                                          initialPlayerPos.y, 92, 66, 1);
   player.addComponent<ColliderComponent>("player");
   player.addComponent<GravityComponent>();
   player.addComponent<CollisionResolver>();
@@ -72,19 +75,25 @@ void Game::init(const char *title, uint_fast32_t xpos, uint_fast32_t ypos,
   enemy.addComponent<ColliderComponent>("enemy");
   enemy.addComponent<GravityComponent>();
   enemy.addComponent<CollisionResolver>();
+  enemy.addComponent<ScrollComponent>(
+      player.getComponentPtr<TransformComponent>(), initialPlayerPos);
 
   enemy.addComponent<SpriteComponent>(
       "assets/Player/p2_spritesheet.png", "assets/Player/p2_spritesheet.txt",
       std::array<std::string, 3>{{"p2_stand", "p2_walk", "p2_jump"}});
 
   enemy.addGroup(enemyGroup);
+
+  enemy.getComponent<TransformComponent>().velocity.x = 1.0f;
+  enemy.getComponent<TransformComponent>().speed = 4;
+
+  map = std::make_unique<Map>();
+  Map::LoadMap("assets/Maps/tilemap50x10.txt", 50, 10);
 }
 
 void Game::update() {
   manager.refresh();
   manager.update();
-
-  enemy.getComponent<TransformComponent>().velocity.x = 0.5f;
 
   if (!enemy.getComponent<GravityComponent>().isInAir) {
     enemy.getComponent<TransformComponent>().velocity.y =
@@ -92,10 +101,6 @@ void Game::update() {
     enemy.getComponent<GravityComponent>().isInAir = true;
   }
 }
-
-auto &tiles(manager.getGroup(mapGroup));
-auto &players(manager.getGroup(playerGroup));
-auto &enemies(manager.getGroup(enemyGroup));
 
 void Game::render() {
   SDL_RenderClear(renderer);
@@ -145,16 +150,15 @@ void Game::AddTile(const uint_fast32_t tileNumber, const uint_fast32_t mapX,
 
   auto &tile(manager.addEntity());
 
+  tile.addComponent<ScrollComponent>(
+      player.getComponentPtr<TransformComponent>(), initialPlayerPos);
+
   tile.addComponent<TileComponent>(sprite_sheet_path, gameMapTile, tilemapTile);
 
   tile.addGroup(mapGroup);
 
   if (std::find(floorTiles.begin(), floorTiles.end(), tileNumber + 1) !=
       floorTiles.end()) {
-
-    tile.addComponent<TransformComponent>(static_cast<float>(gameMapTile.x),
-                                          static_cast<float>(gameMapTile.y),
-                                          gameMapTile.h, gameMapTile.w, 1);
 
     tile.addComponent<ColliderComponent>("floor_tile");
   }
