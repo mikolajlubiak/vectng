@@ -19,34 +19,36 @@ void CollisionResolver::update() {
     if (Collision::AABB(this->entity->getComponent<ColliderComponent>(),
                         *coll) &&
         (this->entity->getComponent<ColliderComponent>().tag != coll->tag)) {
+      auto transform = this->entity->getComponentPtr<TransformComponent>();
 
       if (this->entity->hasComponent<GravityComponent>()) {
         if (!this->entity->getComponent<GravityComponent>().gravityCollision(
                 coll)) {
 
-          float directionX = 0.0f;
-
-          if (this->entity->getComponent<TransformComponent>().velocity.x !=
-              0.0f) {
-            directionX =
-                this->entity->getComponent<TransformComponent>().velocity.x /
-                std::abs(this->entity->getComponent<TransformComponent>()
-                             .velocity.x);
+          if ((transform->position.x + transform->width / 2) -
+                  (coll->collider.x + coll->collider.w / 2) <
+              0) {
+            transform->position.x = coll->collider.x - transform->width;
+          } else {
+            transform->position.x = coll->collider.x + coll->collider.w;
           }
-
-          this->entity->getComponent<TransformComponent>().position.x +=
-              directionX * -6.0f;
+        }
+      } else {
+        if ((transform->position.x + transform->width / 2) -
+                (coll->collider.x + coll->collider.w / 2) <
+            0) {
+          transform->position.x = coll->collider.x - transform->width;
+        } else {
+          transform->position.x = coll->collider.x + coll->collider.w;
         }
 
-      } else {
-
-        Vector2D normalizedVelocity =
-            this->entity->getComponent<TransformComponent>().velocity;
-
-        normalizedVelocity.Normalize();
-
-        this->entity->getComponent<TransformComponent>().position +=
-            normalizedVelocity * -6.0f;
+        if ((transform->position.y + transform->height / 2) -
+                (coll->collider.y + coll->collider.h / 2) <
+            0) {
+          transform->position.y = coll->collider.y - transform->height;
+        } else {
+          transform->position.y = coll->collider.y + coll->collider.h;
+        }
       }
     }
   }
