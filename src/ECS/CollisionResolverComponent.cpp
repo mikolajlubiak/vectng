@@ -28,7 +28,8 @@ void CollisionResolver::update() {
           if ((transform->position.x + transform->width / 2) -
                   (coll->collider.x + coll->collider.w / 2) <
               0) {
-            transform->position.x = coll->collider.x - transform->width;
+            transform->position.x =
+                static_cast<float>(coll->collider.x) - transform->width;
           } else {
             transform->position.x = coll->collider.x + coll->collider.w;
           }
@@ -37,7 +38,8 @@ void CollisionResolver::update() {
         if ((transform->position.x + transform->width / 2) -
                 (coll->collider.x + coll->collider.w / 2) <
             0) {
-          transform->position.x = coll->collider.x - transform->width;
+          transform->position.x =
+              static_cast<float>(coll->collider.x) - transform->width;
         } else {
           transform->position.x = coll->collider.x + coll->collider.w;
         }
@@ -45,7 +47,8 @@ void CollisionResolver::update() {
         if ((transform->position.y + transform->height / 2) -
                 (coll->collider.y + coll->collider.h / 2) <
             0) {
-          transform->position.y = coll->collider.y - transform->height;
+          transform->position.y =
+              static_cast<float>(coll->collider.y) - transform->height;
         } else {
           transform->position.y = coll->collider.y + coll->collider.h;
         }
