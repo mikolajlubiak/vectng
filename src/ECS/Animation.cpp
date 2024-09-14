@@ -38,7 +38,7 @@ parseSpriteSheetData(const std::string &path) {
           spriteData.h;
 
       // Store in the map
-      spriteSheetData[name] = spriteData;
+      spriteSheetData.emplace(name, spriteData);
     }
   }
 
