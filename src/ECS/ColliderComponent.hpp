@@ -10,7 +10,7 @@ public:
   SDL_Rect collider;
   std::string tag;
 
-  ColliderComponent(std::string t) { tag = t; }
+  ColliderComponent(std::string t) : collider({0, 0, 0, 0}) { tag = t; }
 
   void init() override {
     Game::colliders.push_back(entity->getComponentPtr<ColliderComponent>());
