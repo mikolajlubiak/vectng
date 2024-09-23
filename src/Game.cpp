@@ -4,6 +4,7 @@
 #include "Map.hpp"
 #include "TextureManager.hpp"
 #include "Vector2D.hpp"
+#include <algorithm>
 
 std::unique_ptr<Map> map;
 
@@ -27,9 +28,9 @@ auto &tiles(manager.getGroup(mapGroup));
 auto &players(manager.getGroup(playerGroup));
 auto &enemies(manager.getGroup(enemyGroup));
 
-Vector2D initialPlayerPos{20.0f, 500.0f};
-
 bool Game::isRunning = false;
+
+SDL_Rect Game::camera{0, 0, 0, 0};
 
 void Game::init(const char *title, uint_fast32_t xpos, uint_fast32_t ypos,
                 uint_fast32_t width, uint_fast32_t height, bool fullscreen) {
@@ -47,6 +48,9 @@ void Game::init(const char *title, uint_fast32_t xpos, uint_fast32_t ypos,
       std::cout << "Window created!" << std::endl;
     }
 
+    camera.w = width;
+    camera.h = height;
+
     renderer = SDL_CreateRenderer(window, -1, 0);
     if (renderer) {
       SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
@@ -58,8 +62,7 @@ void Game::init(const char *title, uint_fast32_t xpos, uint_fast32_t ypos,
     isRunning = false;
   }
 
-  player.addComponent<TransformComponent>(initialPlayerPos.x,
-                                          initialPlayerPos.y, 92, 66, 1);
+  player.addComponent<TransformComponent>(20.0f, 500.0f, 92, 66, 1);
   player.addComponent<ColliderComponent>("player");
   player.addComponent<GravityComponent>();
   player.addComponent<CollisionResolver>();
@@ -75,8 +78,6 @@ void Game::init(const char *title, uint_fast32_t xpos, uint_fast32_t ypos,
   enemy.addComponent<ColliderComponent>("enemy");
   enemy.addComponent<GravityComponent>();
   enemy.addComponent<CollisionResolver>();
-  enemy.addComponent<ScrollComponent>(
-      player.getComponentPtr<TransformComponent>(), initialPlayerPos);
 
   enemy.addComponent<SpriteComponent>(
       "assets/Player/p2_spritesheet.png", "assets/Player/p2_spritesheet.txt",
@@ -100,6 +101,14 @@ void Game::update() {
         enemy.getComponent<GravityComponent>().jumpVelocity;
     enemy.getComponent<GravityComponent>().isInAir = true;
   }
+
+  camera.x = player.getComponent<TransformComponent>().position.x -
+             (static_cast<float>(camera.w) / 2);
+  camera.y = player.getComponent<TransformComponent>().position.y -
+             (static_cast<float>(camera.h) / 2);
+
+  camera.x = std::clamp(camera.x, 0, camera.w);
+  camera.y = std::clamp(camera.y, 0, camera.h);
 }
 
 void Game::render() {
@@ -149,9 +158,6 @@ void Game::AddTile(const uint_fast32_t tileNumber, const uint_fast32_t mapX,
   gameMapTile.h = tileSize;
 
   auto &tile(manager.addEntity());
-
-  tile.addComponent<ScrollComponent>(
-      player.getComponentPtr<TransformComponent>(), initialPlayerPos);
 
   tile.addComponent<TileComponent>(sprite_sheet_path, gameMapTile, tilemapTile);
 

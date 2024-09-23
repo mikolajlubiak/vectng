@@ -1,15 +1,10 @@
 #include "TileComponent.hpp"
 
+void TileComponent::update() {
+  gameMapTile.x = position.x - Game::camera.x;
+  gameMapTile.y = position.y - Game::camera.y;
+}
+
 void TileComponent::draw() {
-  if (this->entity->hasComponent<ScrollComponent>()) {
-    auto scroll = this->entity->getComponentPtr<ScrollComponent>();
-
-    SDL_Rect scrolledRect = gameMapTile;
-
-    scrolledRect.x = scroll->scrolledPos.x;
-
-    TextureManager::Draw(texture, tilemapTile, scrolledRect, SDL_FLIP_NONE);
-  } else {
-    TextureManager::Draw(texture, tilemapTile, gameMapTile, SDL_FLIP_NONE);
-  }
+  TextureManager::Draw(texture, tilemapTile, gameMapTile, SDL_FLIP_NONE);
 }

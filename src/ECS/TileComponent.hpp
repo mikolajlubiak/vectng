@@ -11,12 +11,11 @@ class ScrollComponent;
 class TileComponent : public Component {
 public:
   SDL_Rect tilemapTile;
-
   SDL_Rect gameMapTile;
 
   SDL_Texture *texture;
 
-  std::string path;
+  Vector2D position;
 
   ~TileComponent() { SDL_DestroyTexture(texture); }
 
@@ -24,9 +23,11 @@ public:
                 const SDL_Rect &gameMapTile, const SDL_Rect &tilemapTile)
       : tilemapTile(std::move(tilemapTile)),
         gameMapTile(std::move(gameMapTile)),
-        path(std::move(sprite_sheet_path)) {}
+        texture(TextureManager::LoadTexture(sprite_sheet_path)),
+        position(static_cast<float>(gameMapTile.x),
+                 static_cast<float>(gameMapTile.y)) {}
 
-  void init() override { texture = TextureManager::LoadTexture(path); }
+  void update() override;
 
   void draw() override;
 };

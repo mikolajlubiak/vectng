@@ -20,8 +20,8 @@ void SpriteComponent::update() {
     transform->width = srcRect.w;
   }
 
-  destRect.x = static_cast<int>(transform->position.x);
-  destRect.y = static_cast<int>(transform->position.y);
+  destRect.x = static_cast<int>(transform->position.x) - Game::camera.x;
+  destRect.y = static_cast<int>(transform->position.y) - Game::camera.y;
 
   destRect.w = transform->width * transform->scale;
   destRect.h = transform->height * transform->scale;
@@ -48,17 +48,7 @@ void SpriteComponent::update() {
 }
 
 void SpriteComponent::draw() {
-  if (this->entity->hasComponent<ScrollComponent>()) {
-    auto scroll = this->entity->getComponentPtr<ScrollComponent>();
-
-    SDL_Rect scrolledRect = destRect;
-
-    scrolledRect.x = scroll->scrolledPos.x;
-
-    TextureManager::Draw(texture, srcRect, scrolledRect, spriteFlip);
-  } else {
-    TextureManager::Draw(texture, srcRect, destRect, spriteFlip);
-  }
+  TextureManager::Draw(texture, srcRect, destRect, spriteFlip);
 }
 
 void SpriteComponent::play(const std::string &animName) {

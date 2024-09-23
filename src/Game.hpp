@@ -25,6 +25,8 @@ public:
   static bool isRunning;
   static std::vector<std::shared_ptr<ColliderComponent>> colliders;
 
+  static SDL_Rect camera;
+
 private:
   SDL_Window *window;
 };
