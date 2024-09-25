@@ -5,7 +5,7 @@ void ColliderComponent::update() {
     auto transform = this->entity->getComponentPtr<TransformComponent>();
 
     collider.x = transform->position.x - Game::camera.x;
-    collider.y = transform->position.y - Game::camera.y;
+    collider.y = transform->position.y;
     collider.w = transform->width * transform->scale;
     collider.h = transform->height * transform->scale;
 
@@ -14,6 +14,5 @@ void ColliderComponent::update() {
 
     collider = tile->gameMapTile;
     collider.x -= Game::camera.x;
-    collider.y -= Game::camera.y;
   }
 }

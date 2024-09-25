@@ -20,8 +20,8 @@ void SpriteComponent::update() {
     transform->width = srcRect.w;
   }
 
-  destRect.x = static_cast<int>(transform->position.x) - Game::camera.x;
-  destRect.y = static_cast<int>(transform->position.y) - Game::camera.y;
+  destRect.x = static_cast<int>(transform->position.x - Game::camera.x);
+  destRect.y = static_cast<int>(transform->position.y);
 
   destRect.w = transform->width * transform->scale;
   destRect.h = transform->height * transform->scale;

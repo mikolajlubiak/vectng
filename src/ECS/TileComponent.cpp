@@ -1,8 +1,8 @@
 #include "TileComponent.hpp"
 
 void TileComponent::update() {
-  gameMapTile.x = position.x - Game::camera.x;
-  gameMapTile.y = position.y - Game::camera.y;
+  gameMapTile.x = static_cast<int>(position.x - Game::camera.x);
+  gameMapTile.y = position.y;
 }
 
 void TileComponent::draw() {
