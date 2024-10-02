@@ -1,18 +1,19 @@
 #include "Game.hpp"
 
-Game *game = nullptr;
-
 int main() {
-  const uint_fast32_t FPS = 60;
-  const uint_fast32_t FRAME_DELAY = 1000 / FPS;
+  constexpr uint_fast32_t FPS = 60;
+  constexpr uint_fast32_t FRAME_DELAY = 1000 / FPS;
 
-  uint_fast64_t frameStart;
-  uint_fast64_t frameTime;
+  constexpr uint_fast32_t WIDTH = 1280;
+  constexpr uint_fast32_t HEIGHT = WIDTH / 16 * 9;
 
-  game = new Game;
+  uint_fast64_t frameStart = 0;
+  uint_fast64_t frameTime = 0;
 
-  game->init("GAME", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1280, 720,
-             false);
+  const std::unique_ptr<Game> game = std::make_unique<Game>();
+
+  game->init("GAME", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WIDTH,
+             HEIGHT, false);
 
   while (game->running()) {
     frameStart = SDL_GetTicks64();

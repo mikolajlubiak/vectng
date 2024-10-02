@@ -25,29 +25,40 @@ void CollisionResolver::update() {
         if (!this->entity->getComponent<GravityComponent>().gravityCollision(
                 coll)) {
 
-          if ((transform->position.x + transform->width / 2) -
-                  (coll->collider.x + coll->collider.w / 2) <
+          if ((transform->position.x +
+               static_cast<float>(transform->width) / 2) -
+                  (static_cast<float>(coll->collider.x) +
+                   static_cast<float>(coll->collider.w) / 2) <
               0) {
-            transform->position.x = coll->collider.x - transform->width;
+            transform->position.x = static_cast<float>(coll->collider.x) -
+                                    static_cast<float>(transform->width);
           } else {
-            transform->position.x = coll->collider.x + coll->collider.w;
+            transform->position.x = static_cast<float>(coll->collider.x) +
+                                    static_cast<float>(transform->width);
           }
         }
       } else {
-        if ((transform->position.x + transform->width / 2) -
-                (coll->collider.x + coll->collider.w / 2) <
+        if ((transform->position.x + static_cast<float>(transform->width) / 2) -
+                (static_cast<float>(coll->collider.x) +
+                 static_cast<float>(coll->collider.w) / 2) <
             0) {
-          transform->position.x = coll->collider.x - transform->width;
+          transform->position.x = static_cast<float>(coll->collider.x) -
+                                  static_cast<float>(transform->width);
         } else {
-          transform->position.x = coll->collider.x + coll->collider.w;
+          transform->position.x = static_cast<float>(coll->collider.x) +
+                                  static_cast<float>(transform->width);
         }
 
-        if ((transform->position.y + transform->height / 2) -
-                (coll->collider.y + coll->collider.h / 2) <
+        if ((transform->position.y +
+             static_cast<float>(transform->height) / 2) -
+                (static_cast<float>(coll->collider.y) +
+                 static_cast<float>(coll->collider.h) / 2) <
             0) {
-          transform->position.y = coll->collider.y - transform->height;
+          transform->position.y = static_cast<float>(coll->collider.y) -
+                                  static_cast<float>(transform->height);
         } else {
-          transform->position.y = coll->collider.y + coll->collider.h;
+          transform->position.y = static_cast<float>(coll->collider.y) +
+                                  static_cast<float>(transform->height);
         }
       }
     }

@@ -1,96 +1,105 @@
 #include "Vector2D.hpp"
-#include "math.h"
+#include <cmath>
 
-Vector2D::Vector2D() {
-  x = 0.0f;
-  y = 0.0f;
+Vector2D::Vector2D() : x(0.0f), y(0.0f) {}
+
+Vector2D::Vector2D(float x, float y) : y(y), x(x) {}
+
+auto Vector2D::Add(const Vector2D &vec) const -> Vector2D {
+  Vector2D v{};
+  v.x = vec.x + this->x;
+  v.y = vec.y + this->y;
+  return v;
 }
 
-Vector2D::Vector2D(float x, float y) {
-  this->x = x;
-  this->y = y;
+auto Vector2D::Subtract(const Vector2D &vec) const -> Vector2D {
+  Vector2D v{};
+  v.x = vec.x - this->x;
+  v.y = vec.y - this->y;
+  return v;
 }
 
-Vector2D &Vector2D::Add(const Vector2D &vec) {
-  this->x += vec.x;
-  this->y += vec.y;
-  return *this;
+auto Vector2D::Multiply(const Vector2D &vec) const -> Vector2D {
+  Vector2D v{};
+  v.x = vec.x * this->x;
+  v.y = vec.y * this->y;
+  return v;
 }
 
-Vector2D &Vector2D::Subtract(const Vector2D &vec) {
-  this->x -= vec.x;
-  this->y -= vec.y;
-  return *this;
+auto Vector2D::Divide(const Vector2D &vec) const -> Vector2D {
+  Vector2D v{};
+  v.x = this->x / vec.x;
+  v.y = this->y / vec.y;
+  return v;
 }
 
-Vector2D &Vector2D::Multiply(const Vector2D &vec) {
-  this->x *= vec.x;
-  this->y *= vec.y;
-  return *this;
+auto operator+(const Vector2D &v1, const Vector2D &v2) -> Vector2D {
+  return v1.Add(v2);
 }
 
-Vector2D &Vector2D::Divide(const Vector2D &vec) {
-  this->x /= vec.x;
-  this->y /= vec.y;
-  return *this;
-}
-
-Vector2D &operator+(Vector2D &v1, const Vector2D &v2) { return v1.Add(v2); }
-Vector2D &operator-(Vector2D &v1, const Vector2D &v2) {
+auto operator-(const Vector2D &v1, const Vector2D &v2) -> Vector2D {
   return v1.Subtract(v2);
 }
 
-Vector2D &operator*(Vector2D &v1, const Vector2D &v2) {
+auto operator*(const Vector2D &v1, const Vector2D &v2) -> Vector2D {
   return v1.Multiply(v2);
 }
 
-Vector2D &operator/(Vector2D &v1, const Vector2D &v2) { return v1.Divide(v2); }
+auto operator/(const Vector2D &v1, const Vector2D &v2) -> Vector2D {
+  return v1.Divide(v2);
+}
 
-Vector2D &Vector2D::operator+=(const Vector2D &vec) { return this->Add(vec); }
+Vector2D &Vector2D::operator+=(const Vector2D &vec) {
+  *this = this->Add(vec);
+  return *this;
+}
 Vector2D &Vector2D::operator-=(const Vector2D &vec) {
-  return this->Subtract(vec);
+  *this = this->Subtract(vec);
+  return *this;
 }
 
 Vector2D &Vector2D::operator*=(const Vector2D &vec) {
-  return this->Multiply(vec);
+  *this = this->Multiply(vec);
+  return *this;
 }
 
 Vector2D &Vector2D::operator/=(const Vector2D &vec) {
-  return this->Divide(vec);
-}
-
-Vector2D &Vector2D::operator*(const int_fast32_t &i) {
-  this->x *= i;
-  this->y *= i;
-
+  *this = this->Divide(vec);
   return *this;
 }
 
-Vector2D &Vector2D::Zero() {
+auto Vector2D::operator*(const int_fast32_t &i) const -> Vector2D {
+  Vector2D v{};
+
+  v.x = this->x * static_cast<float>(i);
+  v.y = this->y * static_cast<float>(i);
+
+  return v;
+}
+
+auto Vector2D::Zero() -> void {
   this->x = 0.0f;
   this->y = 0.0f;
-
-  return *this;
 }
 
-Vector2D &Vector2D::Normalize() {
-  float length = sqrt(x * x + y * y);
+auto Vector2D::Normalize() -> void {
+  float length = sqrtf(x * x + y * y);
 
   if (length != 0.0f) {
     this->x /= length;
     this->y /= length;
   }
-
-  return *this;
 }
 
-std::ostream &operator<<(std::ostream &stream, const Vector2D &vec) {
+auto operator<<(std::ostream &stream, const Vector2D &vec) -> std::ostream & {
   stream << "(" << vec.x << "," << vec.y << ")";
   return stream;
 }
 
-bool operator==(const Vector2D &v1, const Vector2D &v2) {
+auto operator==(const Vector2D &v1, const Vector2D &v2) -> bool {
   return v1.x == v2.x && v1.y == v2.y;
 }
 
-bool operator!=(const Vector2D &v1, const Vector2D &v2) { return !(v1 == v2); }
+auto operator!=(const Vector2D &v1, const Vector2D &v2) -> bool {
+  return !(v1 == v2);
+}

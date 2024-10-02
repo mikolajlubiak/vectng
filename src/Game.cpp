@@ -5,12 +5,10 @@
 #include "TextureManager.hpp"
 #include "Vector2D.hpp"
 
-std::unique_ptr<Map> map;
-
 SDL_Renderer *Game::renderer = nullptr;
 
-Manager manager;
-SDL_Event Game::event;
+Manager manager{};
+SDL_Event Game::event{};
 
 std::vector<std::shared_ptr<ColliderComponent>> Game::colliders;
 
@@ -31,8 +29,8 @@ Vector2D initialPlayerPos{20.0f, 500.0f};
 
 bool Game::isRunning = false;
 
-void Game::init(const char *title, uint_fast32_t xpos, uint_fast32_t ypos,
-                uint_fast32_t width, uint_fast32_t height, bool fullscreen) {
+void Game::init(const char *title, int xpos, int ypos, int width, int height,
+                bool fullscreen) {
   if (SDL_Init(SDL_INIT_EVERYTHING) == 0) {
     std::cout << "Subsystems Initialised!" << std::endl;
 
@@ -58,8 +56,8 @@ void Game::init(const char *title, uint_fast32_t xpos, uint_fast32_t ypos,
     isRunning = false;
   }
 
-  player.addComponent<TransformComponent>(initialPlayerPos.x,
-                                          initialPlayerPos.y, 92, 66, 1);
+  player.addComponent<TransformComponent>(
+      initialPlayerPos.x, initialPlayerPos.y, SPRITE_HEIGHT, SPRITE_WIDTH, 1);
   player.addComponent<ColliderComponent>("player");
   player.addComponent<GravityComponent>();
   player.addComponent<CollisionResolver>();
@@ -71,7 +69,8 @@ void Game::init(const char *title, uint_fast32_t xpos, uint_fast32_t ypos,
   player.addComponent<KeyboardController>();
   player.addGroup(playerGroup);
 
-  enemy.addComponent<TransformComponent>(100.0f, 500.0f, 92, 66, 1);
+  enemy.addComponent<TransformComponent>(100.0f, 500.0f, SPRITE_HEIGHT,
+                                         SPRITE_WIDTH, 1);
   enemy.addComponent<ColliderComponent>("enemy");
   enemy.addComponent<GravityComponent>();
   enemy.addComponent<CollisionResolver>();
@@ -87,7 +86,7 @@ void Game::init(const char *title, uint_fast32_t xpos, uint_fast32_t ypos,
   enemy.getComponent<TransformComponent>().velocity.x = 1.0f;
   enemy.getComponent<TransformComponent>().speed = 4;
 
-  map = std::make_unique<Map>();
+  const std::unique_ptr<Map> map = std::make_unique<Map>();
   Map::LoadMap("assets/Maps/tilemap50x10.txt", 50, 10);
 }
 
@@ -137,9 +136,10 @@ void Game::AddTile(const uint_fast32_t tileNumber, const uint_fast32_t mapX,
   SDL_Rect gameMapTile;
   SDL_Rect tilemapTile;
 
-  tilemapTile.x = tileSize * (tileNumber % tilemapRowSize);
-  tilemapTile.y =
-      tileSize * std::floor(static_cast<float>(tileNumber) / tilemapRowSize);
+  tilemapTile.x = static_cast<int>(tileSize) * (tileNumber % tilemapRowSize);
+  tilemapTile.y = static_cast<int>(tileSize) *
+                  static_cast<uint_fast32_t>(std::floor(
+                      static_cast<float>(tileNumber) / tilemapRowSize));
   tilemapTile.w = tileSize;
   tilemapTile.h = tileSize;
 

@@ -5,12 +5,15 @@
 #include <stdint.h>
 #include <vector>
 
+constexpr uint_fast32_t SPRITE_HEIGHT = 92;
+constexpr uint_fast32_t SPRITE_WIDTH = 66;
+
 class ColliderComponent;
 
 class Game {
 public:
-  void init(const char *title, uint_fast32_t xpos, uint_fast32_t ypos,
-            uint_fast32_t width, uint_fast32_t height, bool fullscreen);
+  void init(const char *title, int xpos, int ypos, int width, int height,
+            bool fullscreen);
 
   void update();
   void render();

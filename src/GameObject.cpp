@@ -1,24 +1,22 @@
 #include "GameObject.hpp"
 #include "TextureManager.hpp"
 
-GameObject::GameObject(const char *textureSheet, float x, float y) {
-  objTexture = TextureManager::LoadTexture(textureSheet);
-
-  xpos = x;
-  ypos = y;
-}
+GameObject::GameObject(const char *textureSheet, uint_fast32_t x,
+                       uint_fast32_t y)
+    : xpos(x), ypos(y), objTexture(TextureManager::LoadTexture(textureSheet)),
+      srcRect{0, 0, 0, 0}, destRect{0, 0, 0, 0} {}
 
 void GameObject::Update() {
   xpos++;
   ypos++;
 
-  srcRect.h = 92;
-  srcRect.w = 66;
+  srcRect.h = SPRITE_HEIGHT;
+  srcRect.w = SPRITE_WIDTH;
   srcRect.x = 0;
   srcRect.y = 0;
 
-  destRect.x = xpos;
-  destRect.y = ypos;
+  destRect.x = static_cast<int>(xpos);
+  destRect.y = static_cast<int>(ypos);
   destRect.w = srcRect.w;
   destRect.h = srcRect.h;
 }

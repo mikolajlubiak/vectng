@@ -3,7 +3,7 @@
 
 class GameObject {
 public:
-  GameObject(const char *textureSheet, float x, float y);
+  GameObject(const char *textureSheet, uint_fast32_t x, uint_fast32_t y);
   ~GameObject();
   void Update();
   void Render();

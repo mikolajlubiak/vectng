@@ -8,9 +8,10 @@ void SpriteComponent::init() {
   transform = entity->getComponentPtr<TransformComponent>();
 
   if (!usesSpritesheet) {
-    srcRect.x = srcRect.y = 0;
-    srcRect.w = transform->width;
-    srcRect.h = transform->height;
+    srcRect.x = 0;
+    srcRect.y = 0;
+    srcRect.w = static_cast<int>(transform->width);
+    srcRect.h = static_cast<int>(transform->height);
   }
 }
 
@@ -23,8 +24,10 @@ void SpriteComponent::update() {
   destRect.x = static_cast<int>(transform->position.x);
   destRect.y = static_cast<int>(transform->position.y);
 
-  destRect.w = transform->width * transform->scale;
-  destRect.h = transform->height * transform->scale;
+  destRect.w =
+      static_cast<int>(transform->width) * static_cast<int>(transform->scale);
+  destRect.h =
+      static_cast<int>(transform->height) * static_cast<int>(transform->scale);
 
   if (animated) {
 

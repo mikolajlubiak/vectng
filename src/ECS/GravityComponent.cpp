@@ -17,7 +17,8 @@ void GravityComponent::update() {
 
       if (gravityCollision(coll)) {
 
-        transform->position.y = coll->collider.y - transform->height;
+        transform->position.y = static_cast<float>(coll->collider.y) -
+                                static_cast<float>(transform->height);
 
         this->isInAir = false;
 
@@ -30,5 +31,6 @@ void GravityComponent::update() {
 bool GravityComponent::gravityCollision(
     std::shared_ptr<ColliderComponent> coll) {
   return coll->tag == "floor_tile" &&
-         transform->position.y <= coll->collider.y - coll->collider.h;
+         transform->position.y <= static_cast<float>(coll->collider.y) -
+                                      static_cast<float>(coll->collider.h);
 }

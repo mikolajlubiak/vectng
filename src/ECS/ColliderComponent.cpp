@@ -4,10 +4,12 @@ void ColliderComponent::update() {
   if (this->entity->hasComponent<TransformComponent>()) {
     auto transform = this->entity->getComponentPtr<TransformComponent>();
 
-    collider.x = transform->position.x;
-    collider.y = transform->position.y;
-    collider.w = transform->width * transform->scale;
-    collider.h = transform->height * transform->scale;
+    collider.x = static_cast<int>(transform->position.x);
+    collider.y = static_cast<int>(transform->position.y);
+    collider.w =
+        static_cast<int>(transform->width) * static_cast<int>(transform->scale);
+    collider.h = static_cast<int>(transform->height) *
+                 static_cast<int>(transform->scale);
 
     if (this->entity->hasComponent<ScrollComponent>()) {
       auto scroll = this->entity->getComponentPtr<ScrollComponent>();
