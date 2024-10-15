@@ -13,7 +13,7 @@ public:
   uint_fast32_t width = 0;
   uint_fast32_t scale = 1;
 
-  uint_fast32_t speed = 2;
+  float speed = 0.1f;
 
   TransformComponent() { position.Zero(); }
 
@@ -38,8 +38,8 @@ public:
 
   void init() override { velocity.Zero(); }
 
-  void update() override {
-    position.x += velocity.x * speed;
-    position.y += velocity.y * speed;
+  void update(uint_fast32_t step) override {
+    position.x += velocity.x * step * speed;
+    position.y += velocity.y * step * speed;
   }
 };

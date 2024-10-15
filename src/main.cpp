@@ -1,14 +1,15 @@
 #include "Game.hpp"
 
 int main() {
-  constexpr uint_fast32_t FPS = 60;
-  constexpr uint_fast32_t FRAME_DELAY = 1000 / FPS;
+  constexpr uint_fast32_t TICKRATE = 1000 / 100; // 100 ticks per second
 
   constexpr uint_fast32_t WIDTH = 1280;
   constexpr uint_fast32_t HEIGHT = WIDTH / 16 * 9;
 
-  uint_fast64_t frameStart = 0;
-  uint_fast64_t frameTime = 0;
+  uint_fast64_t lastTime = SDL_GetTicks64();
+  uint_fast64_t nowTime = 0;
+  uint_fast64_t deltaTime = 0;
+  uint_fast64_t accumulator = 0;
 
   const std::unique_ptr<Game> game = std::make_unique<Game>();
 
@@ -16,16 +17,17 @@ int main() {
              HEIGHT, false);
 
   while (game->running()) {
-    frameStart = SDL_GetTicks64();
+    nowTime = SDL_GetTicks64();
+    deltaTime = nowTime - lastTime;
+    accumulator += deltaTime;
+    lastTime = nowTime;
 
-    game->update();
-    game->render();
-
-    frameTime = SDL_GetTicks() - frameStart;
-
-    if (FRAME_DELAY > frameTime) {
-      SDL_Delay(FRAME_DELAY - frameTime);
+    while (accumulator > TICKRATE) {
+      game->update(TICKRATE);
+      accumulator -= TICKRATE;
     }
+
+    game->render();
   }
 
   game->clean();

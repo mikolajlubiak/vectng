@@ -14,7 +14,7 @@ void CollisionResolver::init() {
   gravity = entity->getComponentPtr<GravityComponent>();
 }
 
-void CollisionResolver::update() {
+void CollisionResolver::update(uint_fast32_t step) {
   for (std::shared_ptr<ColliderComponent> coll : Game ::colliders) {
     if (Collision::AABB(this->entity->getComponent<ColliderComponent>(),
                         *coll) &&

@@ -15,7 +15,7 @@ public:
   void init(const char *title, int xpos, int ypos, int width, int height,
             bool fullscreen);
 
-  void update();
+  void update(uint_fast32_t deltaTime);
   void render();
   void clean();
   bool running() { return isRunning; }

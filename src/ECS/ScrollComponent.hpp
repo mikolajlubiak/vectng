@@ -14,5 +14,5 @@ public:
                   Vector2D initialPlayerPos)
       : playerTransform(playerTransform), initialPlayerPos(initialPlayerPos) {}
 
-  void update() override;
+  void update(uint_fast32_t step) override;
 };

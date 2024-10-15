@@ -12,5 +12,5 @@ public:
 
   void init() override;
 
-  void update() override;
+  void update(uint_fast32_t step) override;
 };

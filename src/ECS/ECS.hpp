@@ -35,7 +35,7 @@ public:
   Entity *entity;
 
   virtual void init() {}
-  virtual void update() {}
+  virtual void update(uint_fast32_t step) {}
   virtual void draw() {}
 
   virtual ~Component() {}
@@ -55,9 +55,9 @@ private:
 public:
   Entity(Manager &mManager) : manager(mManager) {}
 
-  void update() {
+  void update(uint_fast32_t step) {
     for (auto &c : components)
-      c->update();
+      c->update(step);
   }
 
   void draw() {
@@ -108,9 +108,9 @@ private:
   std::array<std::vector<Entity *>, maxGroups> groupedEntities;
 
 public:
-  void update() {
+  void update(uint_fast32_t step) {
     for (auto &e : entities)
-      e->update();
+      e->update(step);
   }
   void draw() {
     for (auto &e : entities)

@@ -1,6 +1,6 @@
 #include "ScrollComponent.hpp"
 
-void ScrollComponent::update() {
+void ScrollComponent::update(uint_fast32_t step) {
   if (this->entity->hasComponent<TransformComponent>()) {
     auto transform = this->entity->getComponentPtr<TransformComponent>();
 

@@ -15,7 +15,7 @@ void SpriteComponent::init() {
   }
 }
 
-void SpriteComponent::update() {
+void SpriteComponent::update(uint_fast32_t step) {
   if (animated) {
     transform->height = srcRect.h;
     transform->width = srcRect.w;

@@ -84,15 +84,15 @@ void Game::init(const char *title, int xpos, int ypos, int width, int height,
   enemy.addGroup(enemyGroup);
 
   enemy.getComponent<TransformComponent>().velocity.x = 1.0f;
-  enemy.getComponent<TransformComponent>().speed = 4;
+  enemy.getComponent<TransformComponent>().speed = 0.2f;
 
   const std::unique_ptr<Map> map = std::make_unique<Map>();
   Map::LoadMap("assets/Maps/tilemap50x10.txt", 50, 10);
 }
 
-void Game::update() {
+void Game::update(uint_fast32_t step) {
   manager.refresh();
-  manager.update();
+  manager.update(step);
 
   if (!enemy.getComponent<GravityComponent>().isInAir) {
     enemy.getComponent<TransformComponent>().velocity.y =

@@ -6,31 +6,19 @@ Vector2D::Vector2D() : x(0.0f), y(0.0f) {}
 Vector2D::Vector2D(float x, float y) : y(y), x(x) {}
 
 auto Vector2D::Add(const Vector2D &vec) const -> Vector2D {
-  Vector2D v{};
-  v.x = vec.x + this->x;
-  v.y = vec.y + this->y;
-  return v;
+  return Vector2D(vec.x + this->x, vec.y + this->y);
 }
 
 auto Vector2D::Subtract(const Vector2D &vec) const -> Vector2D {
-  Vector2D v{};
-  v.x = vec.x - this->x;
-  v.y = vec.y - this->y;
-  return v;
+  return Vector2D(vec.x - this->x, vec.y - this->y);
 }
 
 auto Vector2D::Multiply(const Vector2D &vec) const -> Vector2D {
-  Vector2D v{};
-  v.x = vec.x * this->x;
-  v.y = vec.y * this->y;
-  return v;
+  return Vector2D(vec.x * this->x, vec.y * this->y);
 }
 
 auto Vector2D::Divide(const Vector2D &vec) const -> Vector2D {
-  Vector2D v{};
-  v.x = this->x / vec.x;
-  v.y = this->y / vec.y;
-  return v;
+  return Vector2D(this->x / vec.x, this->y / vec.y);
 }
 
 auto operator+(const Vector2D &v1, const Vector2D &v2) -> Vector2D {
