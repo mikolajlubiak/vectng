@@ -4,11 +4,12 @@ project(VectNG)
 
 file (GLOB_RECURSE VectNG_SOURCES CONFIGURE_DEPENDS "src/*.cpp")
 file (GLOB_RECURSE VectNG_HEADERS CONFIGURE_DEPENDS "src/*.hpp")
+file (GLOB_RECURSE VectNG_ASSETS CONFIGURE_DEPENDS "assets/*")
 
 set (VectNG_INCLUDE_DIRS "")
 foreach (_headerFile ${VectNG_HEADERS})
-    get_filename_component(_dir ${_headerFile} PATH)
-    list (APPEND VectNG_INCLUDE_DIRS ${_dir})
+	get_filename_component(_dir ${_headerFile} PATH)
+	list (APPEND VectNG_INCLUDE_DIRS ${_dir})
 endforeach()
 list (REMOVE_DUPLICATES VectNG_INCLUDE_DIRS)
 
@@ -19,7 +20,12 @@ PKG_SEARCH_MODULE(SDL2IMAGE REQUIRED SDL2_image>=2.0.0)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++20")
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/..)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
+
+foreach (_asset ${VectNG_ASSETS})
+	file(RELATIVE_PATH _relative_path ${CMAKE_SOURCE_DIR} ${_asset})
+	configure_file(${_asset} ${CMAKE_BINARY_DIR}/${_relative_path} COPYONLY)
+endforeach()
 
 add_executable(${PROJECT_NAME} ${VectNG_SOURCES})
 INCLUDE_DIRECTORIES(${SDL2_INCLUDE_DIRS} ${SDL2IMAGE_INCLUDE_DIRS} ${VectNG_INCLUDE_DIRS})
