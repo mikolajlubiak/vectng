@@ -8,7 +8,7 @@ class GravityComponent : public Component {
 public:
   bool isInAir = false;
 
-  float gravityVelocity = 0.02f;
+  float gravityVelocity = 0.2f;
   float jumpVelocity = -6.0f;
 
   std::shared_ptr<ColliderComponent> collider;
@@ -21,7 +21,7 @@ public:
 
   void init() override;
 
-  void update(uint_fast32_t step) override;
+  void update(const uint_fast32_t step) override;
 
   bool gravityCollision(std::shared_ptr<ColliderComponent> coll);
 };

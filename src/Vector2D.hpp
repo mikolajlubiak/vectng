@@ -21,13 +21,14 @@ public:
   friend auto operator/(Vector2D &v1, const Vector2D &v2) -> Vector2D;
   friend auto operator==(const Vector2D &v1, const Vector2D &v2) -> bool;
   friend auto operator!=(const Vector2D &v1, const Vector2D &v2) -> bool;
+  friend auto operator*(const Vector2D &vec, const float &i) -> Vector2D;
+  friend auto operator*(const float &i, const Vector2D &vec) -> Vector2D;
 
   auto operator+=(const Vector2D &vec) -> Vector2D &;
   auto operator-=(const Vector2D &vec) -> Vector2D &;
   auto operator*=(const Vector2D &vec) -> Vector2D &;
   auto operator/=(const Vector2D &vec) -> Vector2D &;
 
-  auto operator*(const int_fast32_t &i) const -> Vector2D;
   auto Zero() -> void;
   auto Normalize() -> void;
 

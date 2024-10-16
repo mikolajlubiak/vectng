@@ -1,6 +1,6 @@
 #include "ColliderComponent.hpp"
 
-void ColliderComponent::update(uint_fast32_t step) {
+void ColliderComponent::update(const uint_fast32_t step) {
   if (this->entity->hasComponent<TransformComponent>()) {
     auto transform = this->entity->getComponentPtr<TransformComponent>();
 

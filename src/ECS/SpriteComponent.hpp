@@ -53,7 +53,7 @@ public:
 
   void init() override;
 
-  void update(uint_fast32_t step) override;
+  void update(const uint_fast32_t step) override;
 
   void draw() override;
 

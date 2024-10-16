@@ -16,5 +16,5 @@ public:
     Game::colliders.push_back(entity->getComponentPtr<ColliderComponent>());
   }
 
-  void update(uint_fast32_t step) override;
+  void update(const uint_fast32_t step) override;
 };

@@ -90,7 +90,7 @@ void Game::init(const char *title, int xpos, int ypos, int width, int height,
   Map::LoadMap("assets/Maps/tilemap50x10.txt", 50, 10);
 }
 
-void Game::update(uint_fast32_t step) {
+void Game::update(const uint_fast32_t step) {
   manager.refresh();
   manager.update(step);
 

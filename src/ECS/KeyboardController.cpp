@@ -9,7 +9,7 @@ void KeyboardController::init() {
   SDL_EventState(SDL_MOUSEMOTION, SDL_IGNORE);
 }
 
-void KeyboardController::update(uint_fast32_t step) {
+void KeyboardController::update(const uint_fast32_t step) {
   while (SDL_PollEvent(&Game::event)) {
     switch (Game::event.type) {
 

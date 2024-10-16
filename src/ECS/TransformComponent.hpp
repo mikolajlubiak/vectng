@@ -38,8 +38,7 @@ public:
 
   void init() override { velocity.Zero(); }
 
-  void update(uint_fast32_t step) override {
-    position.x += velocity.x * step * speed;
-    position.y += velocity.y * step * speed;
+  void update(const uint_fast32_t step) override {
+    position += velocity * (step * speed);
   }
 };

@@ -18,3 +18,12 @@ bool Collision::AABB(const ColliderComponent &collA,
     return false;
   }
 }
+
+bool Collision::AABB(const std::shared_ptr<ColliderComponent> collA,
+                     const std::shared_ptr<ColliderComponent> collB) {
+  if (AABB(collA->collider, collB->collider)) {
+    return true;
+  } else {
+    return false;
+  }
+}

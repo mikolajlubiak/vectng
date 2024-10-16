@@ -9,8 +9,8 @@ void GravityComponent::init() {
   collider = entity->getComponentPtr<ColliderComponent>();
 }
 
-void GravityComponent::update(uint_fast32_t step) {
-  transform->velocity.y += this->gravityVelocity * step;
+void GravityComponent::update(const uint_fast32_t step) {
+  transform->velocity.y += this->gravityVelocity;
 
   for (std::shared_ptr<ColliderComponent> coll : Game::colliders) {
     if (Collision::AABB(*collider, *coll) && (collider->tag != coll->tag)) {

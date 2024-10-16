@@ -37,6 +37,14 @@ auto operator/(const Vector2D &v1, const Vector2D &v2) -> Vector2D {
   return v1.Divide(v2);
 }
 
+auto operator*(const Vector2D &vec, const float &i) -> Vector2D {
+  return Vector2D(vec.x * i, vec.y * i);
+}
+
+auto operator*(const float &i, const Vector2D &vec) -> Vector2D {
+  return Vector2D(vec.x * i, vec.y * i);
+}
+
 Vector2D &Vector2D::operator+=(const Vector2D &vec) {
   *this = this->Add(vec);
   return *this;
@@ -54,15 +62,6 @@ Vector2D &Vector2D::operator*=(const Vector2D &vec) {
 Vector2D &Vector2D::operator/=(const Vector2D &vec) {
   *this = this->Divide(vec);
   return *this;
-}
-
-auto Vector2D::operator*(const int_fast32_t &i) const -> Vector2D {
-  Vector2D v{};
-
-  v.x = this->x * static_cast<float>(i);
-  v.y = this->y * static_cast<float>(i);
-
-  return v;
 }
 
 auto Vector2D::Zero() -> void {
