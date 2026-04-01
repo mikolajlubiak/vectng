@@ -10,11 +10,11 @@ public:
   SDL_Rect collider;
   std::string tag;
 
-  ColliderComponent(std::string t) : collider({0, 0, 0, 0}) { tag = t; }
+  explicit ColliderComponent(std::string t) : collider{0, 0, 0, 0}, tag(std::move(t)) {}
 
   void init() override {
     Game::colliders.push_back(entity->getComponentPtr<ColliderComponent>());
   }
 
-  void update(const uint_fast32_t step) override;
+  void update(uint_fast32_t step) override;
 };

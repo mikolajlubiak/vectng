@@ -9,28 +9,28 @@ void GravityComponent::init() {
   collider = entity->getComponentPtr<ColliderComponent>();
 }
 
-void GravityComponent::update(const uint_fast32_t step) {
-  transform->velocity.y += this->gravityVelocity;
+void GravityComponent::update(uint_fast32_t step) {
+  transform->velocity.y += gravityVelocity;
 
-  for (std::shared_ptr<ColliderComponent> coll : Game::colliders) {
+  for (const auto &coll : Game::colliders) {
     if (Collision::AABB(*collider, *coll) && (collider->tag != coll->tag)) {
-
-      if (gravityCollision(coll)) {
-
+      if (isLandingOn(coll)) {
         transform->position.y = static_cast<float>(coll->collider.y) -
                                 static_cast<float>(transform->height);
-
-        this->isInAir = false;
-
+        isInAir = false;
         transform->velocity.y = std::min(0.0f, transform->velocity.y);
       }
     }
   }
 }
 
-bool GravityComponent::gravityCollision(
-    std::shared_ptr<ColliderComponent> coll) {
-  return coll->tag == "floor_tile" &&
-         transform->position.y <= static_cast<float>(coll->collider.y) -
-                                      static_cast<float>(coll->collider.h);
+bool GravityComponent::isLandingOn(
+    const std::shared_ptr<ColliderComponent> &coll) const {
+  float entityCenterY =
+      transform->position.y + static_cast<float>(transform->height) / 2.0f;
+  float collCenterY =
+      static_cast<float>(coll->collider.y) +
+      static_cast<float>(coll->collider.h) / 2.0f;
+
+  return coll->tag == "floor_tile" && entityCenterY < collCenterY;
 }
