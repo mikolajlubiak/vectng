@@ -16,5 +16,7 @@ public:
     Game::colliders.push_back(entity->getComponentPtr<ColliderComponent>());
   }
 
+  // Re-sync collider rect from the entity's transform or tile component.
+  void sync();
   void update(uint_fast32_t step) override;
 };
