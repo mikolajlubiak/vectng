@@ -36,18 +36,29 @@ void SpriteComponent::init() {
 }
 
 void SpriteComponent::update(uint_fast32_t step) {
-  if (animated) {
-    transform->height = srcRect.h;
-    transform->width = srcRect.w;
-  }
-
   destRect.x = static_cast<int>(transform->position.x);
   destRect.y = static_cast<int>(transform->position.y);
 
-  destRect.w =
-      static_cast<int>(transform->width) * static_cast<int>(transform->scale);
-  destRect.h =
-      static_cast<int>(transform->height) * static_cast<int>(transform->scale);
+  if (animated) {
+    // Use sprite frame dimensions for rendering only — don't modify transform
+    destRect.w = srcRect.w * static_cast<int>(transform->scale);
+    destRect.h = srcRect.h * static_cast<int>(transform->scale);
+
+    // Bottom-align the sprite with the collider so feet stay on the ground
+    int colliderH =
+        static_cast<int>(transform->height) * static_cast<int>(transform->scale);
+    destRect.y += colliderH - destRect.h;
+
+    // Center the sprite horizontally on the collider
+    int colliderW =
+        static_cast<int>(transform->width) * static_cast<int>(transform->scale);
+    destRect.x += (colliderW - destRect.w) / 2;
+  } else {
+    destRect.w = static_cast<int>(transform->width) *
+                 static_cast<int>(transform->scale);
+    destRect.h = static_cast<int>(transform->height) *
+                 static_cast<int>(transform->scale);
+  }
 
   if (animated) {
     if (entity->hasComponent<GravityComponent>() &&

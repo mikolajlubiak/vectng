@@ -1,6 +1,6 @@
 #include "ColliderComponent.hpp"
 
-void ColliderComponent::update(uint_fast32_t step) {
+void ColliderComponent::sync() {
   if (entity->hasComponent<TransformComponent>()) {
     auto transform = entity->getComponentPtr<TransformComponent>();
 
@@ -15,3 +15,5 @@ void ColliderComponent::update(uint_fast32_t step) {
     collider = tile->gameMapTile;
   }
 }
+
+void ColliderComponent::update(uint_fast32_t step) { sync(); }

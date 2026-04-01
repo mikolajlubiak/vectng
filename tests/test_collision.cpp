@@ -70,6 +70,50 @@ TEST(zero_size_rect) {
   EXPECT(Collision::AABB(a, b));
 }
 
+// --- Collision::Overlap tests (strict: touching edges do NOT count) ---
+
+TEST(overlap_overlapping) {
+  SDL_Rect a{0, 0, 50, 50};
+  SDL_Rect b{25, 25, 50, 50};
+  EXPECT(Collision::Overlap(a, b));
+}
+
+TEST(overlap_no_overlap) {
+  SDL_Rect a{0, 0, 50, 50};
+  SDL_Rect b{100, 100, 50, 50};
+  EXPECT(!Collision::Overlap(a, b));
+}
+
+TEST(overlap_touching_not_overlapping) {
+  SDL_Rect a{0, 0, 50, 50};
+  SDL_Rect b{50, 0, 50, 50};
+  EXPECT(!Collision::Overlap(a, b));
+}
+
+TEST(overlap_touching_top_not_overlapping) {
+  SDL_Rect a{0, 0, 50, 50};
+  SDL_Rect b{0, 50, 50, 50};
+  EXPECT(!Collision::Overlap(a, b));
+}
+
+TEST(overlap_same_rect) {
+  SDL_Rect a{10, 10, 30, 30};
+  EXPECT(Collision::Overlap(a, a));
+}
+
+TEST(overlap_contained) {
+  SDL_Rect outer{0, 0, 100, 100};
+  SDL_Rect inner{25, 25, 10, 10};
+  EXPECT(Collision::Overlap(outer, inner));
+  EXPECT(Collision::Overlap(inner, outer));
+}
+
+TEST(overlap_one_pixel) {
+  SDL_Rect a{0, 0, 50, 50};
+  SDL_Rect b{49, 49, 50, 50};
+  EXPECT(Collision::Overlap(a, b));
+}
+
 int main() {
   std::cout << "Collision tests:" << std::endl;
 
@@ -81,6 +125,13 @@ int main() {
   RUN(separated_horizontally);
   RUN(separated_vertically);
   RUN(zero_size_rect);
+  RUN(overlap_overlapping);
+  RUN(overlap_no_overlap);
+  RUN(overlap_touching_not_overlapping);
+  RUN(overlap_touching_top_not_overlapping);
+  RUN(overlap_same_rect);
+  RUN(overlap_contained);
+  RUN(overlap_one_pixel);
 
   if (failures > 0) {
     std::cerr << failures << " test(s) FAILED" << std::endl;

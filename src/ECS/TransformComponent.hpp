@@ -30,6 +30,7 @@ public:
   void init() override { velocity.Zero(); }
 
   void update(uint_fast32_t step) override {
-    position += velocity * (static_cast<float>(step) * speed);
+    // Position update is handled by GravityComponent for physical entities.
+    // Non-physical entities (tiles) don't need velocity application.
   }
 };

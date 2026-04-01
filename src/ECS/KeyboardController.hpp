@@ -3,6 +3,8 @@
 #include "../Game.hpp"
 #include "Components.hpp"
 
+class GravityComponent;
+
 class KeyboardController : public Component {
 public:
   void init() override;
