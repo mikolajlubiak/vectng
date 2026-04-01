@@ -1,32 +1,34 @@
-cmake_minimum_required(VERSION 3.5)
-project(vectng)
+cmake_minimum_required(VERSION 3.10)
+project(vectng LANGUAGES CXX)
 
 # Set C++ standard
 set(CMAKE_CXX_STANDARD 20)
-set(CMAKE_CXX_STANDARD_REQUIRED True)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # Gather source and header files
-file (GLOB_RECURSE VectNG_SOURCES CONFIGURE_DEPENDS "src/*.cpp")
-file (GLOB_RECURSE VectNG_HEADERS CONFIGURE_DEPENDS "src/*.hpp")
-file (GLOB_RECURSE VectNG_ASSETS CONFIGURE_DEPENDS "assets/*")
+file(GLOB_RECURSE VectNG_SOURCES CONFIGURE_DEPENDS "src/*.cpp")
+file(GLOB_RECURSE VectNG_HEADERS CONFIGURE_DEPENDS "src/*.hpp")
+file(GLOB_RECURSE VectNG_ASSETS CONFIGURE_DEPENDS "assets/*")
 
-# Set include directories
-set (VectNG_INCLUDE_DIRS "")
-foreach (_headerFile ${VectNG_HEADERS})
+# Set include directories from header locations
+set(VectNG_INCLUDE_DIRS "")
+foreach(_headerFile ${VectNG_HEADERS})
 	get_filename_component(_dir ${_headerFile} PATH)
-	list (APPEND VectNG_INCLUDE_DIRS ${_dir})
+	list(APPEND VectNG_INCLUDE_DIRS ${_dir})
 endforeach()
-list (REMOVE_DUPLICATES VectNG_INCLUDE_DIRS)
+list(REMOVE_DUPLICATES VectNG_INCLUDE_DIRS)
 
 # Set release build flags
-set(CMAKE_CXX_FLAGS_RELEASE_INIT "${CMAKE_CXX_FLAGS_RELEASE_INIT} - -Ofast -march=native -mtune=native -DNDEBUG")
+set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -Ofast -march=native -mtune=native -DNDEBUG")
 
-# Add library dependencies
-include(FindPkgConfig)
+# Find dependencies
+find_package(PkgConfig REQUIRED)
 find_package(SDL2 REQUIRED)
-find_package(SDL2_image REQUIRED)
+pkg_check_modules(SDL2_IMAGE REQUIRED SDL2_image)
 
-foreach (_asset ${VectNG_ASSETS})
+# Copy assets to build directory
+foreach(_asset ${VectNG_ASSETS})
 	file(RELATIVE_PATH _relative_path ${CMAKE_SOURCE_DIR} ${_asset})
 	configure_file(${_asset} ${CMAKE_BINARY_DIR}/${_relative_path} COPYONLY)
 endforeach()
@@ -35,7 +37,14 @@ endforeach()
 add_executable(${PROJECT_NAME} ${VectNG_SOURCES})
 
 # Include directories
-include_directories(${VectNG_INCLUDE_DIRS} ${SDL2_INCLUDE_DIRS} ${SDL2IMAGE_INCLUDE_DIRS})
+target_include_directories(${PROJECT_NAME} PRIVATE
+	${VectNG_INCLUDE_DIRS}
+	${SDL2_INCLUDE_DIRS}
+	${SDL2_IMAGE_INCLUDE_DIRS}
+)
 
 # Link libraries
-target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARIES} ${SDL2IMAGE_LIBRARIES})
+target_link_libraries(${PROJECT_NAME} PRIVATE
+	${SDL2_LIBRARIES}
+	${SDL2_IMAGE_LIBRARIES}
+)

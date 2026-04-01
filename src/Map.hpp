@@ -1,14 +1,9 @@
 #pragma once
-#include <stdint.h>
+#include <cstdint>
 #include <string>
 
 class Map {
 public:
-  Map() = default;
-  ~Map() = default;
-
-  static void LoadMap(const std::string &path, const uint_fast32_t tilemapSizeX,
-                      const uint_fast32_t tilemapSizeY);
-
-private:
+  static void LoadMap(const std::string &path, uint_fast32_t tilemapSizeX,
+                      uint_fast32_t tilemapSizeY);
 };

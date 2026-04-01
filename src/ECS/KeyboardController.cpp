@@ -1,18 +1,14 @@
 #include "KeyboardController.hpp"
 
-class GravityComponent;
-
 void KeyboardController::init() {
   transform = entity->getComponentPtr<TransformComponent>();
   gravity = entity->getComponentPtr<GravityComponent>();
-
   SDL_EventState(SDL_MOUSEMOTION, SDL_IGNORE);
 }
 
-void KeyboardController::update(const uint_fast32_t step) {
+void KeyboardController::update(uint_fast32_t step) {
   while (SDL_PollEvent(&Game::event)) {
     switch (Game::event.type) {
-
     case SDL_KEYDOWN:
       switch (Game::event.key.keysym.sym) {
       case SDLK_SPACE:
@@ -33,7 +29,6 @@ void KeyboardController::update(const uint_fast32_t step) {
       default:
         break;
       }
-
       break;
 
     case SDL_KEYUP:
@@ -45,7 +40,6 @@ void KeyboardController::update(const uint_fast32_t step) {
       default:
         break;
       }
-
       break;
 
     case SDL_QUIT:
