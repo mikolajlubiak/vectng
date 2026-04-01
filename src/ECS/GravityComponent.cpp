@@ -35,7 +35,7 @@ void GravityComponent::resolveX() {
     if (coll.get() == collider.get()) {
       continue;
     }
-    if (coll->tag != "floor_tile") {
+    if (coll->tag != FLOOR_TILE_TAG) {
       continue;
     }
     if (!Collision::Overlap(collider->collider, coll->collider)) {
@@ -64,7 +64,7 @@ void GravityComponent::resolveY() {
     if (coll.get() == collider.get()) {
       continue;
     }
-    if (coll->tag != "floor_tile") {
+    if (coll->tag != FLOOR_TILE_TAG) {
       continue;
     }
     if (!Collision::Overlap(collider->collider, coll->collider)) {
