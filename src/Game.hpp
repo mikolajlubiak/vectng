@@ -8,6 +8,8 @@
 constexpr uint_fast32_t SPRITE_HEIGHT = 92;
 constexpr uint_fast32_t SPRITE_WIDTH = 66;
 
+inline constexpr const char *FLOOR_TILE_TAG = "floor_tile";
+
 class ColliderComponent;
 
 class Game {

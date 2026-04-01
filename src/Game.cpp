@@ -141,6 +141,6 @@ void Game::AddTile(uint_fast32_t tileNumber, uint_fast32_t mapX,
 
   if (std::find(kFloorTiles.begin(), kFloorTiles.end(), tileNumber + 1) !=
       kFloorTiles.end()) {
-    tile.addComponent<ColliderComponent>("floor_tile");
+    tile.addComponent<ColliderComponent>(FLOOR_TILE_TAG);
   }
 }
