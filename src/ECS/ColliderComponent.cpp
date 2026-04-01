@@ -10,18 +10,8 @@ void ColliderComponent::update(uint_fast32_t step) {
         static_cast<int>(transform->width) * static_cast<int>(transform->scale);
     collider.h = static_cast<int>(transform->height) *
                  static_cast<int>(transform->scale);
-
-    if (entity->hasComponent<ScrollComponent>()) {
-      auto scroll = entity->getComponentPtr<ScrollComponent>();
-      collider.x = static_cast<int>(scroll->scrolledPos.x);
-    }
   } else if (entity->hasComponent<TileComponent>()) {
     auto tile = entity->getComponentPtr<TileComponent>();
     collider = tile->gameMapTile;
-
-    if (entity->hasComponent<ScrollComponent>()) {
-      auto scroll = entity->getComponentPtr<ScrollComponent>();
-      collider.x = static_cast<int>(scroll->scrolledPos.x);
-    }
   }
 }

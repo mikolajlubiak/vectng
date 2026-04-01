@@ -48,3 +48,33 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
 	${SDL2_LIBRARIES}
 	${SDL2_IMAGE_LIBRARIES}
 )
+
+# Tests
+enable_testing()
+
+# Collect source files needed by tests (everything except main.cpp)
+set(VectNG_LIB_SOURCES ${VectNG_SOURCES})
+list(FILTER VectNG_LIB_SOURCES EXCLUDE REGEX "src/main\\.cpp$")
+
+add_executable(test_vector2d tests/test_vector2d.cpp src/Vector2D.cpp)
+target_include_directories(test_vector2d PRIVATE ${VectNG_INCLUDE_DIRS})
+target_compile_features(test_vector2d PRIVATE cxx_std_20)
+add_test(NAME test_vector2d COMMAND test_vector2d)
+
+add_executable(test_collision tests/test_collision.cpp src/Collision.cpp)
+target_include_directories(test_collision PRIVATE
+	${VectNG_INCLUDE_DIRS}
+	${SDL2_INCLUDE_DIRS}
+	${SDL2_IMAGE_INCLUDE_DIRS}
+)
+target_link_libraries(test_collision PRIVATE
+	${SDL2_LIBRARIES}
+	${SDL2_IMAGE_LIBRARIES}
+)
+target_compile_features(test_collision PRIVATE cxx_std_20)
+add_test(NAME test_collision COMMAND test_collision)
+
+add_executable(test_ecs tests/test_ecs.cpp src/ECS/ECS.cpp)
+target_include_directories(test_ecs PRIVATE ${VectNG_INCLUDE_DIRS})
+target_compile_features(test_ecs PRIVATE cxx_std_20)
+add_test(NAME test_ecs COMMAND test_ecs)
