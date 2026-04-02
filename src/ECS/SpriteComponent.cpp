@@ -1,5 +1,25 @@
 #include "SpriteComponent.hpp"
 
+SpriteComponent::SpriteComponent(
+    const std::string &sprite_sheet_path,
+    const std::string &sprite_sheet_data_path,
+    const std::array<std::string, 3> &searchTerms) {
+  usesSpritesheet = true;
+  animated = true;
+
+  spriteSheetData = parseSpriteSheetData(sprite_sheet_data_path);
+  setTex(sprite_sheet_path);
+
+  animations.emplace("idle",
+                     Animation(getSpritesVector(searchTerms[0], spriteSheetData), 100));
+  animations.emplace("walk",
+                     Animation(getSpritesVector(searchTerms[1], spriteSheetData), 40));
+  animations.emplace("jump",
+                     Animation(getSpritesVector(searchTerms[2], spriteSheetData), 100));
+
+  play("idle");
+}
+
 void SpriteComponent::init() {
   if (!entity->hasComponent<TransformComponent>()) {
     entity->addComponent<TransformComponent>();
@@ -15,35 +35,39 @@ void SpriteComponent::init() {
   }
 }
 
-void SpriteComponent::update(const uint_fast32_t step) {
-  if (animated) {
-    transform->height = srcRect.h;
-    transform->width = srcRect.w;
-  }
-
+void SpriteComponent::update(uint_fast32_t step) {
   destRect.x = static_cast<int>(transform->position.x);
   destRect.y = static_cast<int>(transform->position.y);
 
-  destRect.w =
-      static_cast<int>(transform->width) * static_cast<int>(transform->scale);
-  destRect.h =
-      static_cast<int>(transform->height) * static_cast<int>(transform->scale);
+  if (animated) {
+    // Use sprite frame dimensions for rendering only — don't modify transform
+    destRect.w = srcRect.w * static_cast<int>(transform->scale);
+    destRect.h = srcRect.h * static_cast<int>(transform->scale);
+
+    // Bottom-align the sprite with the collider so feet stay on the ground
+    int colliderH =
+        static_cast<int>(transform->height) * static_cast<int>(transform->scale);
+    destRect.y += colliderH - destRect.h;
+
+    // Center the sprite horizontally on the collider
+    int colliderW =
+        static_cast<int>(transform->width) * static_cast<int>(transform->scale);
+    destRect.x += (colliderW - destRect.w) / 2;
+  } else {
+    destRect.w = static_cast<int>(transform->width) *
+                 static_cast<int>(transform->scale);
+    destRect.h = static_cast<int>(transform->height) *
+                 static_cast<int>(transform->scale);
+  }
 
   if (animated) {
-
-    if (entity->getComponent<GravityComponent>().isInAir) {
+    if (entity->hasComponent<GravityComponent>() &&
+        entity->getComponent<GravityComponent>().isInAir) {
       play("jump");
-    }
-
-    else if (entity->getComponent<TransformComponent>().velocity.x != 0.0f) {
+    } else if (transform->velocity.x != 0.0f) {
       play("walk");
-
-      if (entity->getComponent<TransformComponent>().velocity.x < 0.0f) {
-        spriteFlip = SDL_FLIP_HORIZONTAL;
-      } else {
-        spriteFlip = SDL_FLIP_NONE;
-      }
-
+      spriteFlip = (transform->velocity.x < 0.0f) ? SDL_FLIP_HORIZONTAL
+                                                   : SDL_FLIP_NONE;
     } else {
       play("idle");
     }
@@ -51,13 +75,12 @@ void SpriteComponent::update(const uint_fast32_t step) {
 }
 
 void SpriteComponent::draw() {
-  if (this->entity->hasComponent<ScrollComponent>()) {
-    auto scroll = this->entity->getComponentPtr<ScrollComponent>();
-
+  if (entity->hasComponent<ScrollComponent>()) {
+    auto scroll = entity->getComponentPtr<ScrollComponent>();
     SDL_Rect scrolledRect = destRect;
-
-    scrolledRect.x = scroll->scrolledPos.x;
-
+    // Preserve centering/alignment offsets applied in update()
+    int xOffset = destRect.x - static_cast<int>(transform->position.x);
+    scrolledRect.x = static_cast<int>(scroll->scrolledPos.x) + xOffset;
     TextureManager::Draw(texture, srcRect, scrolledRect, spriteFlip);
   } else {
     TextureManager::Draw(texture, srcRect, destRect, spriteFlip);
@@ -65,12 +88,13 @@ void SpriteComponent::draw() {
 }
 
 void SpriteComponent::play(const std::string &animName) {
-  const auto &animData = animations.at(animName);
+  auto it = animations.find(animName);
+  if (it == animations.end()) {
+    return;
+  }
 
+  const auto &animData = it->second;
   uint_fast64_t currentFrame = SDL_GetTicks64() / animData.frame_delay;
-
-  uint_fast64_t index =
-      static_cast<uint_fast64_t>(currentFrame % animData.sprites.size());
-
+  std::size_t index = currentFrame % animData.sprites.size();
   srcRect = animData.sprites[index];
 }

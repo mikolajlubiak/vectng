@@ -2,6 +2,8 @@
 #include <algorithm>
 #include <array>
 #include <bitset>
+#include <cstddef>
+#include <cstdint>
 #include <memory>
 #include <vector>
 
@@ -32,13 +34,13 @@ using ComponentArray = std::array<std::shared_ptr<Component>, maxComponents>;
 
 class Component {
 public:
-  Entity *entity;
+  Entity *entity = nullptr;
 
   virtual void init() {}
-  virtual void update(const uint_fast32_t step) {}
+  virtual void update(uint_fast32_t step) {}
   virtual void draw() {}
 
-  virtual ~Component() {}
+  virtual ~Component() = default;
 };
 
 class Entity {
@@ -48,14 +50,14 @@ private:
   bool active = true;
   std::vector<std::shared_ptr<Component>> components;
 
-  ComponentArray componentArray;
+  ComponentArray componentArray{};
   ComponentBitSet componentBitSet;
   GroupBitSet groupBitSet;
 
 public:
-  Entity(Manager &mManager) : manager(mManager) {}
+  explicit Entity(Manager &mManager) : manager(mManager) {}
 
-  void update(const uint_fast32_t step) {
+  void update(uint_fast32_t step) {
     for (auto &c : components)
       c->update(step);
   }
@@ -65,20 +67,22 @@ public:
       c->draw();
   }
 
-  bool isActive() const { return active; }
+  [[nodiscard]] bool isActive() const { return active; }
   void destroy() { active = false; }
 
-  bool hasGroup(Group mGroup) const { return groupBitSet[mGroup]; }
+  [[nodiscard]] bool hasGroup(Group mGroup) const {
+    return groupBitSet[mGroup];
+  }
 
   void addGroup(Group mGroup);
   void delGroup(Group mGroup) { groupBitSet[mGroup] = false; }
 
-  template <typename T> bool hasComponent() const {
+  template <typename T> [[nodiscard]] bool hasComponent() const {
     return componentBitSet[getComponentTypeID<T>()];
   }
 
   template <typename T, typename... TArgs> T &addComponent(TArgs &&...mArgs) {
-    std::shared_ptr<T> component_ptr =
+    auto component_ptr =
         std::make_shared<T>(std::forward<TArgs>(mArgs)...);
     component_ptr->entity = this;
 
@@ -91,12 +95,13 @@ public:
     return *component_ptr;
   }
 
-  template <typename T> T &getComponent() const {
+  template <typename T> [[nodiscard]] T &getComponent() const {
     return *std::dynamic_pointer_cast<T>(
         componentArray[getComponentTypeID<T>()]);
   }
 
-  template <typename T> std::shared_ptr<T> getComponentPtr() const {
+  template <typename T>
+  [[nodiscard]] std::shared_ptr<T> getComponentPtr() const {
     return std::dynamic_pointer_cast<T>(
         componentArray[getComponentTypeID<T>()]);
   }
@@ -108,32 +113,33 @@ private:
   std::array<std::vector<Entity *>, maxGroups> groupedEntities;
 
 public:
-  void update(const uint_fast32_t step) {
+  void update(uint_fast32_t step) {
     for (auto &e : entities)
       e->update(step);
   }
+
   void draw() {
     for (auto &e : entities)
       e->draw();
   }
 
   void refresh() {
-    for (uint_fast32_t i = 0; i > maxGroups; i++) {
-      auto &v(groupedEntities[i]);
+    for (std::size_t i = 0; i < maxGroups; i++) {
+      auto &v = groupedEntities[i];
 
-      v.erase(std::remove_if(std::begin(v), std::end(v),
-                             [i](Entity *&mEntity) {
-                               return !mEntity->hasGroup(i) ||
-                                      !mEntity->isActive();
-                             }),
-              std::end(v));
+      v.erase(std::remove_if(v.begin(), v.end(),
+                              [i](Entity *mEntity) {
+                                return !mEntity->hasGroup(i) ||
+                                       !mEntity->isActive();
+                              }),
+              v.end());
     }
 
-    entities.erase(std::remove_if(std::begin(entities), std::end(entities),
+    entities.erase(std::remove_if(entities.begin(), entities.end(),
                                   [](const std::shared_ptr<Entity> &mEntity) {
                                     return !mEntity->isActive();
                                   }),
-                   std::end(entities));
+                   entities.end());
   }
 
   Entity &addEntity() {

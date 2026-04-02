@@ -10,19 +10,19 @@ public:
   Vector2D();
   Vector2D(float x, float y);
 
-  auto Add(const Vector2D &vec) const -> Vector2D;
-  auto Subtract(const Vector2D &vec) const -> Vector2D;
-  auto Multiply(const Vector2D &vec) const -> Vector2D;
-  auto Divide(const Vector2D &vec) const -> Vector2D;
+  [[nodiscard]] auto Add(const Vector2D &vec) const -> Vector2D;
+  [[nodiscard]] auto Subtract(const Vector2D &vec) const -> Vector2D;
+  [[nodiscard]] auto Multiply(const Vector2D &vec) const -> Vector2D;
+  [[nodiscard]] auto Divide(const Vector2D &vec) const -> Vector2D;
 
-  friend auto operator+(Vector2D &v1, const Vector2D &v2) -> Vector2D;
-  friend auto operator-(Vector2D &v1, const Vector2D &v2) -> Vector2D;
-  friend auto operator*(Vector2D &v1, const Vector2D &v2) -> Vector2D;
-  friend auto operator/(Vector2D &v1, const Vector2D &v2) -> Vector2D;
+  friend auto operator+(const Vector2D &v1, const Vector2D &v2) -> Vector2D;
+  friend auto operator-(const Vector2D &v1, const Vector2D &v2) -> Vector2D;
+  friend auto operator*(const Vector2D &v1, const Vector2D &v2) -> Vector2D;
+  friend auto operator/(const Vector2D &v1, const Vector2D &v2) -> Vector2D;
   friend auto operator==(const Vector2D &v1, const Vector2D &v2) -> bool;
   friend auto operator!=(const Vector2D &v1, const Vector2D &v2) -> bool;
-  friend auto operator*(const Vector2D &vec, const float &i) -> Vector2D;
-  friend auto operator*(const float &i, const Vector2D &vec) -> Vector2D;
+  friend auto operator*(const Vector2D &vec, float i) -> Vector2D;
+  friend auto operator*(float i, const Vector2D &vec) -> Vector2D;
 
   auto operator+=(const Vector2D &vec) -> Vector2D &;
   auto operator-=(const Vector2D &vec) -> Vector2D &;

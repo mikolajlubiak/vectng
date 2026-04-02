@@ -2,35 +2,112 @@
 
 void GravityComponent::init() {
   if (!entity->hasComponent<ColliderComponent>()) {
-    entity->addComponent<ColliderComponent>("gravity");
+    entity->addComponent<ColliderComponent>("physics");
   }
 
   transform = entity->getComponentPtr<TransformComponent>();
   collider = entity->getComponentPtr<ColliderComponent>();
 }
 
-void GravityComponent::update(const uint_fast32_t step) {
-  transform->velocity.y += this->gravityVelocity;
+void GravityComponent::update(uint_fast32_t step) {
+  // Apply gravity acceleration
+  transform->velocity.y += gravityVelocity;
 
-  for (std::shared_ptr<ColliderComponent> coll : Game::colliders) {
-    if (Collision::AABB(*collider, *coll) && (collider->tag != coll->tag)) {
+  float dt = static_cast<float>(step) * transform->speed;
 
-      if (gravityCollision(coll)) {
+  // Sweep X: move horizontally, sync collider, resolve horizontal collisions
+  transform->position.x += transform->velocity.x * dt;
+  collider->sync();
+  resolveX();
 
-        transform->position.y = static_cast<float>(coll->collider.y) -
-                                static_cast<float>(transform->height);
+  // Sweep Y: move vertically, sync collider, resolve vertical collisions
+  transform->position.y += transform->velocity.y * dt;
+  collider->sync();
+  resolveY();
 
-        this->isInAir = false;
+  // Final sync so collider matches resolved position
+  collider->sync();
 
-        transform->velocity.y = std::min(0.0f, transform->velocity.y);
-      }
+  // Ground probe: check 1 pixel below to reliably detect grounded state.
+  // This prevents isInAir from oscillating due to float→int truncation
+  // when the entity sits exactly on a tile edge.
+  isInAir = !checkGrounded();
+}
+
+void GravityComponent::resolveX() {
+  for (const auto &coll : Game::colliders) {
+    if (coll.get() == collider.get()) {
+      continue;
     }
+    if (coll->tag != FLOOR_TILE_TAG) {
+      continue;
+    }
+    if (!Collision::Overlap(collider->collider, coll->collider)) {
+      continue;
+    }
+
+    const SDL_Rect &tile = coll->collider;
+
+    if (transform->velocity.x > 0.0f) {
+      // Moving right — push to left edge of tile
+      transform->position.x =
+          static_cast<float>(tile.x) -
+          static_cast<float>(collider->collider.w);
+    } else if (transform->velocity.x < 0.0f) {
+      // Moving left — push to right edge of tile
+      transform->position.x = static_cast<float>(tile.x + tile.w);
+    }
+
+    transform->velocity.x = 0.0f;
+    collider->sync();
   }
 }
 
-bool GravityComponent::gravityCollision(
-    std::shared_ptr<ColliderComponent> coll) {
-  return coll->tag == "floor_tile" &&
-         transform->position.y <= static_cast<float>(coll->collider.y) -
-                                      static_cast<float>(coll->collider.h);
+void GravityComponent::resolveY() {
+  for (const auto &coll : Game::colliders) {
+    if (coll.get() == collider.get()) {
+      continue;
+    }
+    if (coll->tag != FLOOR_TILE_TAG) {
+      continue;
+    }
+    if (!Collision::Overlap(collider->collider, coll->collider)) {
+      continue;
+    }
+
+    const SDL_Rect &tile = coll->collider;
+
+    if (transform->velocity.y >= 0.0f) {
+      // Moving down or stationary — land on top of tile
+      transform->position.y =
+          static_cast<float>(tile.y) -
+          static_cast<float>(collider->collider.h);
+    } else {
+      // Moving up — hit bottom of tile (ceiling)
+      transform->position.y = static_cast<float>(tile.y + tile.h);
+    }
+
+    transform->velocity.y = 0.0f;
+    collider->sync();
+  }
+}
+
+bool GravityComponent::checkGrounded() const {
+  // Extend collider 1 pixel downward to detect ground contact,
+  // even when the entity bottom exactly touches the tile top.
+  SDL_Rect probe = collider->collider;
+  probe.h += 1;
+
+  for (const auto &coll : Game::colliders) {
+    if (coll.get() == collider.get()) {
+      continue;
+    }
+    if (coll->tag != FLOOR_TILE_TAG) {
+      continue;
+    }
+    if (Collision::Overlap(probe, coll->collider)) {
+      return true;
+    }
+  }
+  return false;
 }
