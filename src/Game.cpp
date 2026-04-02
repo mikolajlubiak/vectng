@@ -59,6 +59,8 @@ void Game::init(const char *title, int xpos, int ypos, int width, int height,
       initialPlayerPos.x, initialPlayerPos.y, SPRITE_HEIGHT, SPRITE_WIDTH, 1u);
   player.addComponent<ColliderComponent>("player");
   player.addComponent<GravityComponent>();
+  player.addComponent<ScrollComponent>(
+      player.getComponentPtr<TransformComponent>(), initialPlayerPos);
   player.addComponent<SpriteComponent>(
       "assets/Player/p1_spritesheet.png", "assets/Player/p1_spritesheet.txt",
       std::array<std::string, 3>{{"p1_stand", "p1_walk", "p1_jump"}});

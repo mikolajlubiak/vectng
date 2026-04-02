@@ -24,4 +24,5 @@ private:
 
   void resolveX();
   void resolveY();
+  bool checkGrounded() const;
 };
