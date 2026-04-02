@@ -21,13 +21,17 @@ void GravityComponent::update(uint_fast32_t step) {
   resolveX();
 
   // Sweep Y: move vertically, sync collider, resolve vertical collisions
-  isInAir = true;
   transform->position.y += transform->velocity.y * dt;
   collider->sync();
   resolveY();
 
   // Final sync so collider matches resolved position
   collider->sync();
+
+  // Ground probe: check 1 pixel below to reliably detect grounded state.
+  // This prevents isInAir from oscillating due to float→int truncation
+  // when the entity sits exactly on a tile edge.
+  isInAir = !checkGrounded();
 }
 
 void GravityComponent::resolveX() {
@@ -78,7 +82,6 @@ void GravityComponent::resolveY() {
       transform->position.y =
           static_cast<float>(tile.y) -
           static_cast<float>(collider->collider.h);
-      isInAir = false;
     } else {
       // Moving up — hit bottom of tile (ceiling)
       transform->position.y = static_cast<float>(tile.y + tile.h);
@@ -87,4 +90,24 @@ void GravityComponent::resolveY() {
     transform->velocity.y = 0.0f;
     collider->sync();
   }
+}
+
+bool GravityComponent::checkGrounded() const {
+  // Extend collider 1 pixel downward to detect ground contact,
+  // even when the entity bottom exactly touches the tile top.
+  SDL_Rect probe = collider->collider;
+  probe.h += 1;
+
+  for (const auto &coll : Game::colliders) {
+    if (coll.get() == collider.get()) {
+      continue;
+    }
+    if (coll->tag != FLOOR_TILE_TAG) {
+      continue;
+    }
+    if (Collision::Overlap(probe, coll->collider)) {
+      return true;
+    }
+  }
+  return false;
 }

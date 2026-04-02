@@ -78,7 +78,9 @@ void SpriteComponent::draw() {
   if (entity->hasComponent<ScrollComponent>()) {
     auto scroll = entity->getComponentPtr<ScrollComponent>();
     SDL_Rect scrolledRect = destRect;
-    scrolledRect.x = static_cast<int>(scroll->scrolledPos.x);
+    // Preserve centering/alignment offsets applied in update()
+    int xOffset = destRect.x - static_cast<int>(transform->position.x);
+    scrolledRect.x = static_cast<int>(scroll->scrolledPos.x) + xOffset;
     TextureManager::Draw(texture, srcRect, scrolledRect, spriteFlip);
   } else {
     TextureManager::Draw(texture, srcRect, destRect, spriteFlip);
