@@ -8,7 +8,7 @@ class GravityComponent : public Component {
 public:
   bool isInAir = true;
   float gravityVelocity = 0.2f;
-  float jumpVelocity = -6.0f;
+  float jumpVelocity = -7.0f;
 
   GravityComponent() = default;
 
