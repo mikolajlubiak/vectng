@@ -15,5 +15,8 @@
 https://www.matsson.com/prog/sdl2-mingw-w64-tutorial
 
 # Compiling:
-    make clean release
+* `mkdir build`
+* `cd build`
+* `cmake ..`
+* `cmake --build .`
 
